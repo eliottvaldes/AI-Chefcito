@@ -4,6 +4,7 @@ cloudinary.config(process.env.CLOUDINARY_URL);
 
 const { azureAnalyzeImage } = require('../helpers/analyzeImageAzure');
 const { validateCategories, validateTags } = require('../helpers/validateAnalysis');
+const { getFoodObjects } = require("../helpers/getImageObjects");
 
 
 const uploadImage = async (req = request, res = response) => {
@@ -48,7 +49,7 @@ const analizaImage = async (req = request, res = response) => {
     }
 
     // validate if the image contains category food
-    const { categories, description } = response.data;
+    const { categories, description, objects } = response.data;
 
     const isValidCategory = validateCategories(categories);
     const isValidteTag = validateTags(description);
@@ -56,14 +57,23 @@ const analizaImage = async (req = request, res = response) => {
     if (!isValidCategory && !isValidteTag) {
         return res.status(400).json({
             ok: false,
-            msg: 'The image does not contain food'
+            msg: 'The image does not contain food - categories/tags'
+        });
+    }
+
+    const foodFound = getFoodObjects(objects);
+
+    if (!foodFound.length) {
+        return res.status(400).json({
+            ok: false,
+            msg: 'The image does not contain food - objects'
         });
     }
 
     res.status(200).json({
         ok: true,
         msg: 'Image analized successfully',
-        data: response.data
+        foodFound
     });
 
 
