@@ -19,7 +19,7 @@ router.put('/upload',
     ]
     , uploadImage);
 
-router.get('/analize',
+router.get('/analyze',
     [
         check('image', 'Image is required').not().isEmpty(),
         check('image', 'Image url must be valid').isURL(),
