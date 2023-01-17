@@ -9,6 +9,7 @@ class Server {
 
         // define the paths for routes
         this.imagesPath = '/api/images';
+        this.recipesPath = '/api/recipes';
 
         this.middlewares();
 
@@ -28,6 +29,7 @@ class Server {
 
     routes() {
         this.app.use(this.imagesPath, require('../routes/images.routes'));
+        this.app.use(this.recipesPath, require('../routes/recipes.routes'));
     }
 
     listen() {
