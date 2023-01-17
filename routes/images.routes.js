@@ -23,7 +23,6 @@ router.get('/analize',
     [
         check('image', 'Image is required').not().isEmpty(),
         check('image', 'Image url must be valid').isURL(),
-        check('categories', 'Categories must be selected').not().isEmpty(),
         check('description', 'Description must be selected').not().isEmpty(),
         check('objects', 'Objects must be selected').not().isEmpty(),
         validateFields
