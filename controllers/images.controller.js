@@ -1,10 +1,10 @@
 const { request, response } = require("express");
-const { azureAnalyzeImage } = require('../helpers/analyzeImageAzure');
-
-// import cloudinary package
 const cloudinary = require('cloudinary').v2
-// configure cloudinary account
 cloudinary.config(process.env.CLOUDINARY_URL);
+
+const { azureAnalyzeImage } = require('../helpers/analyzeImageAzure');
+const { validateCategories, validateTags } = require('../helpers/validateAnalysis');
+
 
 const uploadImage = async (req = request, res = response) => {
     const { fileUpload } = req.files;
@@ -44,6 +44,19 @@ const analizaImage = async (req = request, res = response) => {
         return res.status(400).json({
             ok: false,
             msg: 'There was an error while analize the image'
+        });
+    }
+
+    // validate if the image contains category food
+    const { categories, description } = response.data;
+
+    const isValidCategory = validateCategories(categories);
+    const isValidteTag = validateTags(description);
+
+    if (!isValidCategory && !isValidteTag) {
+        return res.status(400).json({
+            ok: false,
+            msg: 'The image does not contain food'
         });
     }
 
