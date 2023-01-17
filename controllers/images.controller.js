@@ -51,15 +51,14 @@ const analizaImage = async (req = request, res = response) => {
     // validate if the image contains category food
     const { categories, description, objects } = response.data;
 
-    const isValidCategory = validateCategories(categories);
-    const isValidteTag = validateTags(description);
-
-    if (!isValidCategory && !isValidteTag) {
-        return res.status(400).json({
-            ok: false,
-            msg: 'The image does not contain food - categories/tags'
-        });
-    }
+    // const isValidCategory = validateCategories(categories);
+    // const isValidteTag = validateTags(description);    
+    // if (!isValidCategory && !isValidteTag) {
+    //     return res.status(400).json({
+    //         ok: false,
+    //         msg: 'The image does not contain food - categories/tags'
+    //     });
+    // }
 
     const foodFound = getFoodObjects(objects);
 
