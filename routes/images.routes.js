@@ -23,8 +23,6 @@ router.get('/analyze',
     [
         check('image', 'Image is required').not().isEmpty(),
         check('image', 'Image url must be valid').isURL(),
-        check('description', 'Description must be selected').not().isEmpty(),
-        check('objects', 'Objects must be selected').not().isEmpty(),
         validateFields
     ]
     , analizaImage);

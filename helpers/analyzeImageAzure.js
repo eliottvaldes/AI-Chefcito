@@ -2,12 +2,8 @@ const axios = require('axios');
 
 const azureAnalyzeImage = async (bodyRequest) => {
 
-    const { image, description, objects } = bodyRequest;
-    let urlRequest = `${process.env.AZURE_CS_ENDPOINT}/vision/v3.2/analyze?visualFeatures=Categories,`;
-
-    description ? urlRequest += 'Description,' : null;
-    objects ? urlRequest += 'Objects,' : null;
-    urlRequest += '&model-version=latest&language=en';
+    const { image } = bodyRequest;
+    let urlRequest = `${process.env.AZURE_CS_ENDPOINT}/vision/v3.2/analyze?visualFeatures=Categories,Description,Objects&model-version=latest&language=en`;
 
     const body = { "url": image };
 
