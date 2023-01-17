@@ -64,6 +64,7 @@ const azureAnalizeImage = async (bodyRequest) => {
 
     description ? urlRequest += 'Description,' : null;
     objects ? urlRequest += 'Objects,' : null;
+    urlRequest += '&model-version=latest&language=en';
 
     const body = { "url": image };
 
