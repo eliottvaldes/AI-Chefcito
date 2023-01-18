@@ -23,10 +23,39 @@
     body {
       background-color: #eeee;
     }
+
+    #recipes-img {
+      max-width: 250px;
+    }
+
+    #uploaded-img {
+      max-width: 550px;
+    }
+
+    #analyzed-img {
+      max-width: 550px;
+    }
+
+
+    /* media query for mobiles and tablets */
+    @media only screen and (max-width: 768px) {
+      #recipes-img {
+        max-width: 100%;
+      }
+
+      #uploaded-img {
+        max-width: 100%;
+      }
+
+      #analyzed-img {
+        max-width: 100%;
+      }
+    }
+
   </style>
 
   <div class="container-fluid">
-    <div id="app" class="container p-5">
+    <div id="app" class="container py-5">
 
       <div class="row justify-content-center mb-5">
 
@@ -55,11 +84,12 @@
             <div class="card-body">
 
               <div class="mb-3">
-                <label for="" class="form-label">Select an image to analyze</label>                
+                <label for="" class="form-label">Select an image to analyze</label>
                 <input @change="verifyImage" ref="image" type="file" accept="image/*" class="form-control" />
                 <small id="helpId" class="text-muted">This image will be used for the rest of the process</small>
-              </div>              
-              <button :disabled="!isBtnEnabled" @click.prevent="submitImage" class="btn btn-primary float-end">Upload</button>
+              </div>
+              <button :disabled="!isBtnEnabled" @click.prevent="submitImage"
+                class="btn btn-primary float-end">Upload</button>
 
             </div>
           </div>
@@ -70,7 +100,7 @@
           <div class="card shadow-sm p-3 mb-5">
             <div class="card-body text-center">
               <figure class="figure">
-                <img v-if="imageUrl" :src="imageUrl" class="figure-img img-fluid rounded" style="max-width: 450px;" />
+                <img v-if="imageUrl" :src="imageUrl" id="uploaded-img" class="figure-img img-fluid rounded" />
                 <figcaption class="figure-caption">Image you upload</figcaption>
               </figure>
               <br>
@@ -86,7 +116,7 @@
           <div class="card shadow-sm p-3 mb-5">
             <div class="card-body text-center">
               <figure class="figure">
-                <img v-if="imageUrl" :src="imageUrl" class="figure-img img-fluid rounded" style="max-width: 450px;" />
+                <img v-if="imageUrl" :src="imageUrl" id="analyzed-img" class="figure-img img-fluid rounded" />
                 <figcaption class="figure-caption">Image you upload</figcaption>
               </figure>
               <br class="mb-5">
@@ -133,14 +163,14 @@
               <div class="card shadow-sm p-3 mb-5">
                 <div class="card-body">
                   <h3>Prompt</h3>
-                  <code>
+                  <div>
                     <pre v-for="(line, index) in resultPrompt" :key="index">{{ line }}</pre>
-                  </code>
+                  </div>
                   <hr class="my-5">
                   <h3>Recipe</h3>
-                  <code>
-                    <pre v-for="(line, index) in resultRecipe " :key="index">{{ line }}</pre>
-                  </code>
+                  <div>
+                    <pre v-for="(line, index) in resultRecipe " :key="index" class="text-break">{{ line }}</pre>
+                  </div>
                 </div>
 
               </div>
@@ -151,8 +181,7 @@
               <div class="card shadow-sm p-3 mb-5">
                 <div class="card-body text-center">
                   <figure class="figure">
-                    <img v-if="imageUrl" :src="imageUrl" class="figure-img img-fluid rounded"
-                      style="max-width: 250px;" />
+                    <img v-if="imageUrl" :src="imageUrl" id="recipes-img" class="figure-img img-fluid rounded" />
                     <figcaption class="figure-caption">Image you upload</figcaption>
                     <figcaption class="figure-caption">Recipe using ingredients: {{analysisResults }}</figcaption>
                   </figure>
