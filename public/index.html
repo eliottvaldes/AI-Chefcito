@@ -258,7 +258,11 @@
             let formData = new FormData()
             formData.append('fileUpload', file)
 
-            let { data } = await axios.put('http://localhost:3000/api/images/upload', formData)
+            const enviroment = (window.location.hostname.includes('localhost'))
+              ? 'http://localhost:3000/'
+              : 'https://ai-chefcito-production.up.railway.app';
+
+            let { data } = await axios.put(`${enviroment}/api/images/upload`, formData)
             const { ok, msg, url } = data
 
             if (!ok) {
@@ -290,7 +294,11 @@
               image: this.imageUrl
             }
 
-            let { data } = await axios.post('http://localhost:3000/api/images/analyze', body)
+            const enviroment = (window.location.hostname.includes('localhost'))
+              ? 'http://localhost:3000/'
+              : 'https://ai-chefcito-production.up.railway.app';
+
+            let { data } = await axios.post(`${enviroment}/api/images/analyze`, body)
             const { ok, msg, foodFound } = data
 
             if (!ok) {
@@ -323,7 +331,11 @@
               ingredients: this.analysisResults
             }
 
-            let { data } = await axios.post('http://localhost:3000/api/recipes', body)
+            const enviroment = (window.location.hostname.includes('localhost'))
+              ? 'http://localhost:3000/'
+              : 'https://ai-chefcito-production.up.railway.app';
+
+            let { data } = await axios.post(`${enviroment}/api/recipes`, body)
             const { ok, msg, prompt, result } = data
 
             if (!ok) {
