@@ -62,15 +62,29 @@
 
         <div v-if="page==2" class="col-12 mb-5">
           <img v-if="imageUrl" :src="imageUrl" width="200" height="200" />
-          here show the image and two buttons: one for analize the image and other for upload another image
+          <br>
+          <button @click="analyzeImage"> Analyze</button>
+          <button @click="selectImage"> Upload another image</button>
         </div>
 
         <div v-if="page==3" class="col-12 mb-5">
           Here we show the image and the results of the analize
+          <img v-if="imageUrl" :src="imageUrl" width="200" height="200" />
+          <br>
+          <!-- if there are data in analysisResults -->
+          <div v-if="Object.keys(analysisResults).length > 0">
+            <h3>Results</h3>
+            <code>
+              {{analysisResults}}
+            </code>
+            <ul>
+              <li v-for="ingredient in analysisResults" :key="key">
+                {{ingredient}}
+              </li>
+            </ul>
+          </div>
+
         </div>
-
-
-
 
       </div>
 
@@ -84,9 +98,10 @@
     const app = Vue.createApp({
       data() {
         return {
-          page: 1,
-          imageUrl: null,
+          page: 2,
+          imageUrl: 'https://res.cloudinary.com/drplgwglb/image/upload/v1674002629/hn5qmm9tj1v7nju7ksys.jpg',
           isBtnEnabled: false,
+          analysisResults: {},
         }
       },
       mounted() {
@@ -109,7 +124,7 @@
             formData.append('fileUpload', file)
 
             let { data } = await axios.put('http://localhost:3000/api/images/upload', formData)
-            const { ok, msg, url, } = data
+            const { ok, msg, url } = data
 
             if (!ok) {
               throw new Error(msg)
@@ -120,7 +135,48 @@
           } catch (error) {
             console.error(error)
           }
+        },
+        selectImage() {
+          this.page = 1
+          this.imageUrl = null
+          this.isBtnEnabled = false
+        },
+
+        async analyzeImage() {
+          try {
+            const formDataImg = new FormData()
+            formDataImg.append('image', this.imageUrl)
+
+            const body = {
+              image: this.imageUrl
+            }
+
+            let { data } = await axios.post('http://localhost:3000/api/images/analyze', body)
+            const { ok, msg, foodFound } = data
+
+            if (!ok) {
+              throw new Error(msg)
+            }
+
+            this.analysisResults = this.getAnalysisResults(foodFound)
+            this.page = 3
+
+            console.log(this.analysisResults)
+          } catch (error) {
+            // show the error message
+            console.warn(error)
+          }
+        },
+
+        getAnalysisResults(ingredients) {
+          const objects = ingredients.map((item) => {
+            return item.object;
+          });
+          // remove duplicates
+          return [...new Set(objects)];
         }
+
+
       },
 
     }).mount('#app')
