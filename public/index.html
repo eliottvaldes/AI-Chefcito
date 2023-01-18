@@ -63,8 +63,8 @@
         <div v-if="page==2" class="col-12 mb-5">
           <img v-if="imageUrl" :src="imageUrl" width="200" height="200" />
           <br>
-          <button @click="analyzeImage"> Analyze</button>
-          <button @click="selectImage"> Upload another image</button>
+          <button :disabled="!isBtnEnabled" @click="analyzeImage"> Analyze</button>
+          <button :disabled="!isBtnEnabled" @click="selectImage"> Upload another image</button>
         </div>
 
         <div v-if="page==3" class="col-12 mb-5">
@@ -80,8 +80,7 @@
           </div>
           <br><br>
 
-          <button @click="getRecipes"> Get recipes </button>
-          <button @click="selectImage"> Upload another image</button>
+          <button :disabled="!isBtnEnabled" @click="getRecipes"> Get recipes </button>
 
         </div>
 
@@ -104,6 +103,18 @@
 
         </div>
 
+        <!-- show a loader -->
+        <div v-if="page=='loader'" class="col-12 mb-5">
+          <div class="card shadow p-3 mb-5">
+            <div class="card-body text-center">
+              <h3>Processing your data </h3>
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
 
       </div>
 
@@ -117,12 +128,12 @@
     const app = Vue.createApp({
       data() {
         return {
-          page: 3,
+          page: 2,
           imageUrl: 'https://res.cloudinary.com/drplgwglb/image/upload/v1674002629/hn5qmm9tj1v7nju7ksys.jpg',
           isBtnEnabled: false,
           analysisResults: ["Fruit", "Apple"],
-          prompt: null,
-          recipe: null,
+          prompt: "Write a healthy recipe based on these ingredients and instructions:Ingredients:FruitAppleInstructions:",
+          recipe: "1. Preheat oven to 350°F.2. Slice the apple into thin slices and place on a baking sheet.3. Bake for 15 minutes, flipping the slices halfway through.4. Remove from the oven and let cool.5. Serve with your favorite yogurt or ice cream for a delicious and healthy snack. Enjoy!",
         }
       },
       mounted() {
@@ -147,6 +158,8 @@
         },
         async submitImage() {
           try {
+            this.loadingData()
+
             let input = this.$refs.image
             let file = input.files[0]
 
@@ -162,8 +175,10 @@
 
             this.imageUrl = url
             this.page = 2
+            this.isBtnEnabled = true
           } catch (error) {
             console.error(error)
+            this.isBtnEnabled = true
           }
         },
         selectImage() {
@@ -174,6 +189,8 @@
         },
         async analyzeImage() {
           try {
+            this.loadingData()
+
             const formDataImg = new FormData()
             formDataImg.append('image', this.imageUrl)
 
@@ -191,10 +208,12 @@
             this.analysisResults = this.getAnalysisResults(foodFound)
             this.page = 3
 
+            this.isBtnEnabled = true
             console.log(this.analysisResults)
           } catch (error) {
             // show the error message
             console.warn(error)
+            this.isBtnEnabled = true
           }
         },
         getAnalysisResults(ingredients) {
@@ -206,6 +225,8 @@
         },
         async getRecipes() {
           try {
+            this.loadingData()
+
             const body = {
               ingredients: this.analysisResults
             }
@@ -220,13 +241,19 @@
             this.prompt = prompt
             this.recipe = result
             this.page = 4
-
+            this.isBtnEnabled = true
           } catch (error) {
             // show the error message
             console.warn(error)
+            this.isBtnEnabled = true
           }
 
         },
+
+        loadingData() {
+          this.isBtnEnabled = false
+          this.page = 'loader'
+        }
 
       },
 
