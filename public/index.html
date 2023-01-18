@@ -53,21 +53,15 @@
               <h3>Image Selection</h3>
             </div>
             <div class="card-body">
-              <!-- form to upload an image -->
-              <div class="mb-3">
-                <label for="" class="form-label">Select image to analyze</label>
-                <input type="file" name="" id="" class="form-control" placeholder="" aria-describedby="helpId">
-                <small id="helpId" class="text-muted">This image will be upload</small>
-              </div>
-              <button class="btn btn-primary float-end">
-                UPLOAD
-              </button>
+              <input @change="verifyImage" type="file" ref="image" accept="image/*" />
+              <button :disabled="!isBtnEnabled" @click.prevent="submitImage">Upload</button>
             </div>
           </div>
 
         </div>
 
         <div v-if="page==2" class="col-12 mb-5">
+          <img v-if="imageUrl" :src="imageUrl" width="200" height="200" />
           here show the image and two buttons: one for analize the image and other for upload another image
         </div>
 
@@ -90,17 +84,43 @@
     const app = Vue.createApp({
       data() {
         return {
-          page: 1
+          page: 1,
+          imageUrl: null,
+          isBtnEnabled: false,
         }
       },
       mounted() {
 
       },
       methods: {
+        verifyImage() {
+          if (this.$refs.image.files.length > 0) {
+            this.isBtnEnabled = true
+          } else {
+            this.isBtnEnabled = false
+          }
+        },
+        async submitImage() {
+          try {
+            let input = this.$refs.image
+            let file = input.files[0]
 
-      },
-      watch: {
+            let formData = new FormData()
+            formData.append('fileUpload', file)
 
+            let { data } = await axios.put('http://localhost:3000/api/images/upload', formData)
+            const { ok, msg, url, } = data
+
+            if (!ok) {
+              throw new Error(msg)
+            }
+
+            this.imageUrl = url
+            this.page = 2
+          } catch (error) {
+            console.error(error)
+          }
+        }
       },
 
     }).mount('#app')
