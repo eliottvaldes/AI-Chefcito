@@ -163,13 +163,13 @@
               <div class="card shadow-sm p-3 mb-5">
                 <div class="card-body">
                   <h3>Prompt</h3>
-                  <div>
-                    <pre v-for="(line, index) in resultPrompt" :key="index">{{ line }}</pre>
-                  </div>
+                    <div>
+                      <p v-for="(line, index) in resultPrompt" :key="index" class="text-break">{{ line }} <br></p>
+                    </div>
                   <hr class="my-5">
                   <h3>Recipe</h3>
                   <div>
-                    <pre v-for="(line, index) in resultRecipe " :key="index" class="text-break">{{ line }}</pre>
+                    <p v-for="(line, index) in resultRecipe " :key="index" class="text-break">{{ line }}</p>
                   </div>
                 </div>
 
@@ -221,11 +221,11 @@
       data() {
         return {
           page: 1,
-          imageUrl: 'https://res.cloudinary.com/drplgwglb/image/upload/v1674002629/hn5qmm9tj1v7nju7ksys.jpg',
+          imageUrl: null,
           isBtnEnabled: false,
-          analysisResults: ["Fruit", "Apple"],
-          prompt: "Write a healthy recipe based on these ingredients and instructions:Ingredients:FruitAppleInstructions:",
-          recipe: "1. Preheat oven to 350°F.2. Slice the apple into thin slices and place on a baking sheet.3. Bake for 15 minutes, flipping the slices halfway through.4. Remove from the oven and let cool.5. Serve with your favorite yogurt or ice cream for a delicious and healthy snack. Enjoy!",
+          analysisResults: [],
+          prompt: null,
+          recipe: null,
         }
       },
       mounted() {
