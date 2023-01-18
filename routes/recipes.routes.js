@@ -8,7 +8,7 @@ const { getRecipes } = require('../controllers/recipes.controller');
 const router = Router();
 
 // Define all recipes-routes
-router.get('/',
+router.post('/',
     [
         check('ingredients', 'Ingredients are required').not().isEmpty(),
         validateFields
