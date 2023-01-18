@@ -77,14 +77,33 @@
             <code>
               {{analysisResults}}
             </code>
-            <ul>
-              <li v-for="ingredient in analysisResults" :key="key">
-                {{ingredient}}
-              </li>
-            </ul>
           </div>
+          <br><br>
+
+          <button @click="getRecipes"> Get recipes </button>
+          <button @click="selectImage"> Upload another image</button>
 
         </div>
+
+
+        <div v-if="page==4" class="col-12 mb-5">
+
+          <h3>
+            Prompt
+          </h3>
+          <code>
+            <pre v-for="(line, index) in resultPrompt" :key="index">{{ line }}</pre>
+          </code>
+          <hr>
+          <h3>
+            Recipe
+          </h3>
+          <code>
+            <pre v-for="(line, index) in resultRecipe " :key="index">{{ line }}</pre>
+          </code>
+
+        </div>
+
 
       </div>
 
@@ -98,13 +117,24 @@
     const app = Vue.createApp({
       data() {
         return {
-          page: 2,
+          page: 3,
           imageUrl: 'https://res.cloudinary.com/drplgwglb/image/upload/v1674002629/hn5qmm9tj1v7nju7ksys.jpg',
           isBtnEnabled: false,
-          analysisResults: {},
+          analysisResults: ["Fruit", "Apple"],
+          prompt: null,
+          recipe: null,
         }
       },
       mounted() {
+
+      },
+      computed: {
+        resultPrompt() {
+          return this.prompt.split('\n')
+        },
+        resultRecipe() {
+          return this.recipe.split('\n')
+        },
 
       },
       methods: {
@@ -140,8 +170,8 @@
           this.page = 1
           this.imageUrl = null
           this.isBtnEnabled = false
+          this.analysisResults = []
         },
-
         async analyzeImage() {
           try {
             const formDataImg = new FormData()
@@ -167,15 +197,36 @@
             console.warn(error)
           }
         },
-
         getAnalysisResults(ingredients) {
           const objects = ingredients.map((item) => {
             return item.object;
           });
           // remove duplicates
           return [...new Set(objects)];
-        }
+        },
+        async getRecipes() {
+          try {
+            const body = {
+              ingredients: this.analysisResults
+            }
 
+            let { data } = await axios.post('http://localhost:3000/api/recipes', body)
+            const { ok, msg, prompt, result } = data
+
+            if (!ok) {
+              throw new Error(msg)
+            }
+
+            this.prompt = prompt
+            this.recipe = result
+            this.page = 4
+
+          } catch (error) {
+            // show the error message
+            console.warn(error)
+          }
+
+        },
 
       },
 
