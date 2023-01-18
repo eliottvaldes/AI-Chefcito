@@ -61,45 +61,102 @@
         </div>
 
         <div v-if="page==2" class="col-12 mb-5">
-          <img v-if="imageUrl" :src="imageUrl" width="200" height="200" />
-          <br>
-          <button :disabled="!isBtnEnabled" @click="analyzeImage"> Analyze</button>
-          <button :disabled="!isBtnEnabled" @click="selectImage"> Upload another image</button>
+          <div class="card shadow-sm p-3 mb-5">
+            <div class="card-body text-center">
+              <figure class="figure">
+                <img v-if="imageUrl" :src="imageUrl" class="figure-img img-fluid rounded" style="max-width: 450px;" />
+                <figcaption class="figure-caption">Image you upload</figcaption>
+              </figure>
+              <br>
+              <button :disabled="!isBtnEnabled" @click="selectImage" class="btn btn-outline-danger m-3"> Cancel</button>
+              <button :disabled="!isBtnEnabled" @click="analyzeImage" class="btn btn-primary m-3"> Analyze
+                Image</button>
+            </div>
+          </div>
         </div>
 
         <div v-if="page==3" class="col-12 mb-5">
-          Here we show the image and the results of the analize
-          <img v-if="imageUrl" :src="imageUrl" width="200" height="200" />
-          <br>
-          <!-- if there are data in analysisResults -->
-          <div v-if="Object.keys(analysisResults).length > 0">
-            <h3>Results</h3>
-            <code>
-              {{analysisResults}}
-            </code>
-          </div>
-          <br><br>
 
-          <button :disabled="!isBtnEnabled" @click="getRecipes"> Get recipes </button>
+          <div class="card shadow-sm p-3 mb-5">
+            <div class="card-body text-center">
+              <figure class="figure">
+                <img v-if="imageUrl" :src="imageUrl" class="figure-img img-fluid rounded" style="max-width: 450px;" />
+                <figcaption class="figure-caption">Image you upload</figcaption>
+              </figure>
+              <br class="mb-5">
+              <div v-if="Object.keys(analysisResults).length > 0" class="row justify-content-center">
+                <div class="col-8 mb-5">
+                  <h3> Analysis Results </h3>
+                  <hr>
+                  <code class="mb-5">
+                    <h4>We found this ingredients in the photo... </h4>
+                    {{analysisResults}}
+                  </code>
+                  <br>
+                  <button :disabled="!isBtnEnabled" @click="selectImage" class="btn btn-outline-danger m-3">
+                    Cancel</button>
+                  <button :disabled="!isBtnEnabled" @click="getRecipes" class="btn btn-primary m-3">Get Recipes
+                  </button>
+                </div>
+              </div>
+              <div v-else class="row justify-content-center">
+                <div class="col-8 mb-5">
+                  <h3> Analysis Results </h3>
+                  <hr>
+                  <code>
+                  <h4>Sorry, we couldn't find any ingredients in the photo... </h4>
+                </code>
+                  <br>
+                  <button :disabled="!isBtnEnabled" @click="selectImage" class="btn btn-outline-primary m-3">
+                    Select another image
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
 
         </div>
 
 
         <div v-if="page==4" class="col-12 mb-5">
 
-          <h3>
-            Prompt
-          </h3>
-          <code>
-            <pre v-for="(line, index) in resultPrompt" :key="index">{{ line }}</pre>
-          </code>
-          <hr>
-          <h3>
-            Recipe
-          </h3>
-          <code>
-            <pre v-for="(line, index) in resultRecipe " :key="index">{{ line }}</pre>
-          </code>
+          <div class="row row-cols-1 row-cols-lg-2 justify-content-between">
+
+            <div class="col-12 col-lg-7">
+              <div class="card shadow-sm p-3 mb-5">
+                <div class="card-body">
+                  <h3>Prompt</h3>
+                  <code>
+                    <pre v-for="(line, index) in resultPrompt" :key="index">{{ line }}</pre>
+                  </code>
+                  <hr class="my-5">
+                  <h3>Recipe</h3>
+                  <code>
+                    <pre v-for="(line, index) in resultRecipe " :key="index">{{ line }}</pre>
+                  </code>
+                </div>
+
+              </div>
+
+            </div>
+
+            <div class="col-12 col-lg-5">
+              <div class="card shadow-sm p-3 mb-5">
+                <div class="card-body text-center">
+                  <figure class="figure">
+                    <img v-if="imageUrl" :src="imageUrl" class="figure-img img-fluid rounded"
+                      style="max-width: 250px;" />
+                    <figcaption class="figure-caption">Image you upload</figcaption>
+                    <figcaption class="figure-caption">Recipe using ingredients: {{analysisResults }}</figcaption>
+                  </figure>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+
 
         </div>
 
@@ -128,7 +185,7 @@
     const app = Vue.createApp({
       data() {
         return {
-          page: 2,
+          page: 4,
           imageUrl: 'https://res.cloudinary.com/drplgwglb/image/upload/v1674002629/hn5qmm9tj1v7nju7ksys.jpg',
           isBtnEnabled: false,
           analysisResults: ["Fruit", "Apple"],
