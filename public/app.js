@@ -7,10 +7,11 @@ const app = Vue.createApp({
             page: 1,
             prompt: null,
             recipe: null,
+            enviroment: null,
         }
     },
     mounted() {
-
+        this.getEnviorment()
     },
     computed: {
         resultPrompt() {
@@ -22,6 +23,11 @@ const app = Vue.createApp({
 
     },
     methods: {
+        getEnviorment() {
+            this.enviroment = (window.location.hostname.includes('localhost'))
+                ? 'http://localhost:3000'
+                : 'https://ai-chefcito-production.up.railway.app'
+        },
         verifyImage() {
             if (this.$refs.image.files.length > 0) {
                 this.isBtnEnabled = true
@@ -38,13 +44,9 @@ const app = Vue.createApp({
                 let file = input.files[0]
 
                 let formData = new FormData()
-                formData.append('fileUpload', file)
+                formData.append('fileUpload', file)               
 
-                const enviroment = (window.location.hostname.includes('localhost'))
-                    ? 'http://localhost:3000'
-                    : 'https://ai-chefcito-production.up.railway.app';
-
-                let { data } = await axios.put(`${enviroment}/api/images/upload`, formData)
+                let { data } = await axios.put(`${this.enviroment}/api/images/upload`, formData)
                 const { msg, url } = data
 
                 this.imageUrl = url
@@ -69,12 +71,8 @@ const app = Vue.createApp({
                 const body = {
                     image: this.imageUrl
                 }
-
-                const enviroment = (window.location.hostname.includes('localhost'))
-                    ? 'http://localhost:3000'
-                    : 'https://ai-chefcito-production.up.railway.app';
-
-                let { data } = await axios.post(`${enviroment}/api/images/analyze`, body)
+               
+                let { data } = await axios.post(`${this.enviroment}/api/images/analyze`, body)
                 const { msg, foodFound } = data
 
                 this.analysisResults = this.getAnalysisResults(foodFound)
@@ -101,12 +99,8 @@ const app = Vue.createApp({
                 const body = {
                     ingredients: this.analysisResults
                 }
-
-                const enviroment = (window.location.hostname.includes('localhost'))
-                    ? 'http://localhost:3000'
-                    : 'https://ai-chefcito-production.up.railway.app';
-
-                let { data } = await axios.post(`${enviroment}/api/recipes`, body)
+        
+                let { data } = await axios.post(`${this.enviroment}/api/recipes`, body)
                 const { msg, prompt, result } = data
 
                 this.prompt = prompt
