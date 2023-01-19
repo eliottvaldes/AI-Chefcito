@@ -25,21 +25,18 @@ const getRecipes = async (req = request, res = response) => {
         });
     }
 
-    let prompt = `Write a healthy recipe based on these ingredients and instructions:\nIngredients:\n-${ingredients.join('\n-')}\nInstructions:`;
+    let prompt = `Write a recipe strictly based on these ingredients and give the instructions:\nIngredients:\n-${ingredients.join('\n-')}`;
 
     try {
         const recipe = await openai.createCompletion({
             model: "text-davinci-003",
             prompt,
-            temperature: 0.4,
-            max_tokens: 500,
+            temperature: 1,
+            max_tokens: 400,
             top_p: 1.0,
             frequency_penalty: 0.0,
             presence_penalty: 0.0,
         });
-
-        // remove the word 'Instructions:' part from the prompt
-        prompt = prompt.replace('\nInstructions:', '');
 
         return res.status(200).json({
             ok: true,
