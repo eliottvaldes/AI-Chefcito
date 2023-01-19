@@ -44,7 +44,7 @@ const app = Vue.createApp({
                 let file = input.files[0]
 
                 let formData = new FormData()
-                formData.append('fileUpload', file)               
+                formData.append('fileUpload', file)
 
                 let { data } = await axios.put(`${this.enviroment}/api/images/upload`, formData)
                 const { msg, url } = data
@@ -75,9 +75,9 @@ const app = Vue.createApp({
                 const { data } = await axios.post(`${this.enviroment}/api/images/analyze`, body)
 
                 const { ok, msg, foodFound } = data
-                if(!ok){
+                if (!ok) {
                     this.analysisResults = {}
-                }else{                    
+                } else {
                     this.analysisResults = this.getAnalysisResults(foodFound)
                 }
                 this.page = 3
@@ -103,7 +103,7 @@ const app = Vue.createApp({
                 const body = {
                     ingredients: this.analysisResults
                 }
-        
+
                 let { data } = await axios.post(`${this.enviroment}/api/recipes`, body)
                 const { msg, prompt, result } = data
 
@@ -159,6 +159,34 @@ const app = Vue.createApp({
             }
             errorsCaught.push(msg);
             return errorsCaught;
+        },
+        createAlerts(icon, data) {
+
+            const title = (icon != 'error') ? 'Success!' : 'Ups!';
+
+            let html = '';
+            data.forEach((msg) => {
+                html += `<li>${msg}</li>`;
+            });
+
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            })
+
+            Toast.fire({
+                icon,
+                title,
+                html,
+            })
+
         }
 
     },
