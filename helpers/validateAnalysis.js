@@ -20,9 +20,19 @@ const validateTags = (description) => {
 }
 
 
+// validate if the image contains adult content. Return false if the image contains adult content
+const validateAdultContent = (content) => {
+    const { isAdultContent, isRacyContent, isGoryContent } = content;
+    if (isAdultContent || isRacyContent || isGoryContent) {
+        return false;
+    }
+    return true;
+}
+
 
 module.exports = {
     validateCategories,
-    validateTags
+    validateTags,
+    validateAdultContent
 }
 

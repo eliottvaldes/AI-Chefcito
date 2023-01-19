@@ -3,7 +3,7 @@ const cloudinary = require('cloudinary').v2
 cloudinary.config(process.env.CLOUDINARY_URL);
 
 const { azureAnalyzeImage } = require('../helpers/analyzeImageAzure');
-const { validateCategories, validateTags } = require('../helpers/validateAnalysis');
+const { validateCategories, validateTags, validateAdultContent } = require('../helpers/validateAnalysis');
 const { getFoodObjects } = require("../helpers/getImageObjects");
 
 
@@ -48,8 +48,15 @@ const analizaImage = async (req = request, res = response) => {
         });
     }
 
-    // validate if the image contains category food
-    const { categories, description, objects } = response.data;
+    const { categories, adult, description, objects } = response.data;
+
+    const isValidAdultContent = validateAdultContent(adult);
+    if (!isValidAdultContent) {
+        return res.status(400).json({
+            ok: false,
+            msg: 'USER HAS BEEN BLOCKED - The image contains adult content'
+        });
+    }
 
     // const isValidCategory = validateCategories(categories);
     // const isValidteTag = validateTags(description);    
