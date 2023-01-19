@@ -68,10 +68,13 @@ const analizaImage = async (req = request, res = response) => {
             msg: 'The image does not contain food - objects'
         });
     }
+        
+    const imgDescription = description.captions[0].text ?? 'No description found';
 
     res.status(200).json({
         ok: true,
         msg: 'Image analyzed successfully',
+        imgDescription,
         foodFound
     });
 
