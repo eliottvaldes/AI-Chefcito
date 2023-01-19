@@ -71,11 +71,15 @@ const app = Vue.createApp({
                 const body = {
                     image: this.imageUrl
                 }
-               
-                let { data } = await axios.post(`${this.enviroment}/api/images/analyze`, body)
-                const { msg, foodFound } = data
 
-                this.analysisResults = this.getAnalysisResults(foodFound)
+                const { data } = await axios.post(`${this.enviroment}/api/images/analyze`, body)
+
+                const { ok, msg, foodFound } = data
+                if(!ok){
+                    this.analysisResults = {}
+                }else{                    
+                    this.analysisResults = this.getAnalysisResults(foodFound)
+                }
                 this.page = 3
 
             } catch (error) {
