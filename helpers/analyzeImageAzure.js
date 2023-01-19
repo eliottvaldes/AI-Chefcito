@@ -3,7 +3,7 @@ const axios = require('axios');
 const azureAnalyzeImage = async (bodyRequest) => {
 
     const { image } = bodyRequest;
-    let urlRequest = `${process.env.AZURE_CS_ENDPOINT}/vision/v3.2/analyze?visualFeatures=Categories,Description,Objects&model-version=latest&language=en`;
+    let urlRequest = `${process.env.AZURE_CS_ENDPOINT}/vision/v3.2/analyze?visualFeatures=Categories,Description,Objects,Adult&model-version=latest&language=en`;
 
     const body = { "url": image };
 
@@ -12,10 +12,10 @@ const azureAnalyzeImage = async (bodyRequest) => {
             'Content-Type': 'application/json',
             'Ocp-Apim-Subscription-Key': process.env.AZURE_CS_KEY
         }
-    }).then((response) => {
+    }).then(({ data }) => {
         return {
             ok: true,
-            data: response.data
+            data: data
         }
     }).catch((error) => {
         return { ok: false };
