@@ -118,11 +118,15 @@ const app = Vue.createApp({
             this.page = 'loader'
         },
         catchErrors(error) {
-            const { status, data } = error.response;
-            this.defineErrorsType(status);
-            const errors = this.getErrors(data);
+            const { response } = error
+            if (!response) {
+                alert('ERROR IN CORS POLICY. Please try again later. If the problem persists, please contact the admin. ');
+                return;
+            }
+            const { status, data } = response
+            this.defineErrorsType(status)
+            const errors = this.getErrors(data)
             console.log('ERRORS: ', errors)
-
         },
         defineErrorsType(statusCode) {
 
