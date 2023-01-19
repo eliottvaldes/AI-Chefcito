@@ -38,13 +38,13 @@ const uploadImage = async (req = request, res = response) => {
 
 const analizaImage = async (req = request, res = response) => {
 
-    // call to azure analize image
+    // call to azure analyze image
     const response = await azureAnalyzeImage({ ...req.body });
 
     if (!response.ok) {
         return res.status(400).json({
             ok: false,
-            msg: 'There was an error while analize the image'
+            msg: 'There was an error while image analysis'
         });
     }
 
@@ -71,7 +71,7 @@ const analizaImage = async (req = request, res = response) => {
 
     res.status(200).json({
         ok: true,
-        msg: 'Image analized successfully',
+        msg: 'Image analyzed successfully',
         foodFound
     });
 
