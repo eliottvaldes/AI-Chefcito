@@ -149,13 +149,17 @@ const app = Vue.createApp({
             const { msg } = error;
             if (!msg) {
                 const { errors } = error;
+                if (!errors) {
+                    // error in axios request
+                    errorsCaught.push('Error in during the request. Please try again later. If the problem persists, please contact the admin.');
+                    return errorsCaught;
+                }
                 errors.forEach((error) => {
                     errorsCaught.push(error.msg);
                 });
-            } else {
-                errorsCaught.push(msg);
+                return errorsCaught;
             }
-
+            errorsCaught.push(msg);
             return errorsCaught;
         }
 
