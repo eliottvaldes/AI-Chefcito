@@ -63,7 +63,7 @@ const analizaImage = async (req = request, res = response) => {
     const foodFound = getFoodObjects(objects);
 
     if (!foodFound.length) {
-        return res.status(400).json({
+        return res.status(200).json({
             ok: false,
             msg: 'The image does not contain food - objects'
         });
