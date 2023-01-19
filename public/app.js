@@ -49,6 +49,7 @@ const app = Vue.createApp({
                 let { data } = await axios.put(`${this.enviroment}/api/images/upload`, formData)
                 const { msg, url } = data
 
+                this.createAlerts('success', [msg])
                 this.imageUrl = url
                 this.page = 2
             } catch (error) {
@@ -75,11 +76,15 @@ const app = Vue.createApp({
                 const { data } = await axios.post(`${this.enviroment}/api/images/analyze`, body)
 
                 const { ok, msg, foodFound } = data
+
                 if (!ok) {
                     this.analysisResults = {}
                 } else {
                     this.analysisResults = this.getAnalysisResults(foodFound)
                 }
+                
+                let alertStatus = (ok) ? 'success' : 'error'
+                this.createAlerts(alertStatus, [msg])
                 this.page = 3
 
             } catch (error) {
@@ -107,6 +112,7 @@ const app = Vue.createApp({
                 let { data } = await axios.post(`${this.enviroment}/api/recipes`, body)
                 const { msg, prompt, result } = data
 
+                this.createAlerts('success', [msg])
                 this.prompt = prompt
                 this.recipe = result
                 this.page = 4
@@ -130,7 +136,7 @@ const app = Vue.createApp({
             const { status, data } = response
             this.defineErrorsType(status)
             const errors = this.getErrors(data)
-            console.log('ERRORS: ', errors)
+            this.createAlerts('error', errors)
         },
         defineErrorsType(statusCode) {
 
