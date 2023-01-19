@@ -30,6 +30,7 @@ const app = Vue.createApp({
             }
         },
         async submitImage() {
+            const currentPage = this.page
             try {
                 this.loadingData()
 
@@ -44,19 +45,15 @@ const app = Vue.createApp({
                     : 'https://ai-chefcito-production.up.railway.app';
 
                 let { data } = await axios.put(`${enviroment}/api/images/upload`, formData)
-                const { ok, msg, url } = data
-
-                if (!ok) {
-                    throw new Error(msg)
-                }
+                const { msg, url } = data
 
                 this.imageUrl = url
                 this.page = 2
-                this.isBtnEnabled = true
             } catch (error) {
-                console.warn(error)
-                this.isBtnEnabled = true
+                this.catchErrors(error);
+                this.page = currentPage
             }
+            this.isBtnEnabled = true
         },
         selectImage() {
             this.page = 1
@@ -65,11 +62,12 @@ const app = Vue.createApp({
             this.analysisResults = []
         },
         async analyzeImage() {
+            const currentPage = this.page
             try {
                 this.loadingData()
 
                 const body = {
-                    image: this.imageUrl ?? 'https://sdfkjdsf.com'
+                    image: this.imageUrl
                 }
 
                 const enviroment = (window.location.hostname.includes('localhost'))
@@ -82,10 +80,11 @@ const app = Vue.createApp({
                 this.analysisResults = this.getAnalysisResults(foodFound)
                 this.page = 3
 
-                this.isBtnEnabled = true
             } catch (error) {
-                this.isBtnEnabled = true
+                this.catchErrors(error);
+                this.page = currentPage
             }
+            this.isBtnEnabled = true
         },
         getAnalysisResults(ingredients) {
             const objects = ingredients.map((item) => {
@@ -95,6 +94,7 @@ const app = Vue.createApp({
             return [...new Set(objects)];
         },
         async getRecipes() {
+            const currentPage = this.page
             try {
                 this.loadingData()
 
@@ -107,20 +107,16 @@ const app = Vue.createApp({
                     : 'https://ai-chefcito-production.up.railway.app';
 
                 let { data } = await axios.post(`${enviroment}/api/recipes`, body)
-                const { ok, msg, prompt, result } = data
-
-                if (!ok) {
-                    throw new Error(msg)
-                }
+                const { msg, prompt, result } = data
 
                 this.prompt = prompt
                 this.recipe = result
                 this.page = 4
-                this.isBtnEnabled = true
             } catch (error) {
-                console.warn(error)
-                this.isBtnEnabled = true
+                this.catchErrors(error);
+                this.page = currentPage
             }
+            this.isBtnEnabled = true
 
         },
         loadingData() {
