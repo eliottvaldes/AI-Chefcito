@@ -171,7 +171,11 @@
                     <p v-for="(line, index) in resultRecipe " :key="index" class="text-break">{{ line }}</p>
                   </div>
                 </div>
-
+                <div class="card-footer">
+                  <button :disabled="!isBtnEnabled" @click="getRecipes" class="btn btn-outline-primary float-end">
+                    Get another recipe!
+                  </button>
+                </div>
               </div>
 
             </div>
