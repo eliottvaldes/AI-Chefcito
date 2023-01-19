@@ -3,7 +3,7 @@ const { check } = require('express-validator');
 
 const { validateFields } = require('../middlewares/validateFields');
 
-const { getRecipes } = require('../controllers/recipes.controller');
+const { getRecipes, getCustomRecipes } = require('../controllers/recipes.controller');
 
 const router = Router();
 
@@ -14,6 +14,14 @@ router.post('/',
         validateFields
     ]
     , getRecipes);
+
+router.post('/custom',
+    [
+        check('ingredients', 'Ingredients are required').not().isEmpty(),
+        check('customizations', 'Customizations are required').not().isEmpty(),
+        validateFields
+    ]
+    , getCustomRecipes);
 
 
 module.exports = router;
