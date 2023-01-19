@@ -68,11 +68,8 @@ const app = Vue.createApp({
             try {
                 this.loadingData()
 
-                const formDataImg = new FormData()
-                formDataImg.append('image', this.imageUrl)
-
                 const body = {
-                    image: this.imageUrl
+                    image: this.imageUrl ?? 'https://sdfkjdsf.com'
                 }
 
                 const enviroment = (window.location.hostname.includes('localhost'))
@@ -80,19 +77,13 @@ const app = Vue.createApp({
                     : 'https://ai-chefcito-production.up.railway.app';
 
                 let { data } = await axios.post(`${enviroment}/api/images/analyze`, body)
-                const { ok, msg, foodFound } = data
-
-                if (!ok) {
-                    throw new Error(msg)
-                }
+                const { msg, foodFound } = data
 
                 this.analysisResults = this.getAnalysisResults(foodFound)
                 this.page = 3
 
                 this.isBtnEnabled = true
             } catch (error) {
-                // show the error message
-                console.warn(error)
                 this.isBtnEnabled = true
             }
         },
@@ -127,7 +118,6 @@ const app = Vue.createApp({
                 this.page = 4
                 this.isBtnEnabled = true
             } catch (error) {
-                // show the error message
                 console.warn(error)
                 this.isBtnEnabled = true
             }
@@ -136,6 +126,37 @@ const app = Vue.createApp({
         loadingData() {
             this.isBtnEnabled = false
             this.page = 'loader'
+        },
+        catchErrors(error) {
+            const { status, data } = error.response;
+            this.defineErrorsType(status);
+            const errors = this.getErrors(data);
+            console.log('ERRORS: ', errors)
+
+        },
+        defineErrorsType(statusCode) {
+
+            if (statusCode >= 500) {
+                console.log('ERROR IN SERVER')
+                // TODO: show the error message and message to contact the admin
+            } else {
+                // TODO: show the error message
+            }
+
+        },
+        getErrors(error) {
+            let errorsCaught = [];
+            const { msg } = error;
+            if (!msg) {
+                const { errors } = error;
+                errors.forEach((error) => {
+                    errorsCaught.push(error.msg);
+                });
+            } else {
+                errorsCaught.push(msg);
+            }
+
+            return errorsCaught;
         }
 
     },
