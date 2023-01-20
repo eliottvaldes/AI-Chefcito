@@ -1,4 +1,6 @@
 const { Configuration, OpenAIApi } = require("openai");
+const { generatePrompt } = require("./generatePromptOpenAI");
+
 const configuration = new Configuration({
     apiKey: process.env.OPENAI_API_KEY,
 });
@@ -9,9 +11,7 @@ const getRecipeOpenAI = async (ingredients = [], cutomizations = {}) => {
 
     try {
         const openai = new OpenAIApi(configuration);
-
-        const prompt = generatePropmt(ingredients, cutomizations);
-
+        const prompt = generatePrompt(ingredients, cutomizations);        
         const { data } = await openai.createCompletion({
             model: "text-davinci-003",
             prompt,
@@ -29,21 +29,12 @@ const getRecipeOpenAI = async (ingredients = [], cutomizations = {}) => {
             result: data.choices[0].text
         }
 
-
     } catch (error) {
         return {ok: false};
     }
 
-
 }
 
-
-const generatePropmt = (ingredients = [], customizations = {}) => {
-
-    // TODO: Add customizations to prompt
-
-    return `Write a recipe strictly based on these ingredients and give the instructions:\nIngredients:\n-${ingredients.join('\n-')}`;
-}
 
 module.exports = {
     getRecipeOpenAI
