@@ -44,12 +44,20 @@ const getCustomRecipes = async (req = request, res = response) => {
             ok: false,
             msg: 'No customizations provided'
         });
-    }    
+    }
 
-    return res.status(200).json(
-        ingredients,
-        customizations
-    );
+
+    const recipe = await getRecipeOpenAI(ingredients, customizations);
+
+    if (!recipe.ok) {
+        return res.status(400).json({
+            ok: false,
+            msg: 'Error trying to get recipes from OpenAI',
+        });
+    }
+
+    return res.status(200).json(recipe);
+
 }
 
 module.exports = {
