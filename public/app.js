@@ -4,7 +4,7 @@ const app = Vue.createApp({
             analysisResults: [],
             imageUrl: null,
             isBtnEnabled: false,
-            page: 1,
+            page: 'initial',
             prompt: null,
             recipe: null,
             enviroment: null,

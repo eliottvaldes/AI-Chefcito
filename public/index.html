@@ -21,7 +21,12 @@
 
   <style>
     body {
-      background-color: #eeee;
+
+      background-image: url('./bg_image.png');
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-size: cover;
+     
     }
 
     #recipes-img {
@@ -53,24 +58,66 @@
     }
   </style>
 
+  <nav class="navbar bg-body-tertiary" style="background-color: rgba(255, 255, 255, 0.933);">
+    <div class="container-fluid">
+      <a class="navbar-brand"><i>AI</i> Chefcito!</a>
+      <form class="d-flex" role="search">
+        <button class="btn btn-outline-success" type="submit">My account</button>
+      </form>
+    </div>
+  </nav>
+
   <div class="container-fluid">
     <div id="app" class="container py-5">
 
       <div class="row justify-content-center mb-5">
 
-        <div class="col-12 col-lg-6">
-          <div class="card shadow-lg p-3 mb-5 rounded">
-            <div class="card-body text-center">
-              <h1><i>AI</i> Güey, un chefcito! </h1>
-              <p class="lead">This is a draft of the web application to create food recipes using Azure Cognitive
-                Services and OpenAI services </p>
+        <div v-if="page=='initial'">
+          <div class="row justify-content-center">
+
+            <div class="col-12 col-lg-6">
+              <div id="welcome" class="card shadow p-3 mb-5 rounded">
+                <div class="card-body text-center">                
+                  <p class="lead">This is a draft of the web application to create food recipes using Azure Cognitive
+                    Services and OpenAI services </p>
+                </div>
+                <div class="card-footer text-end">
+                  <small class="mb-0">
+                    Alpha v.0.0.2
+                  </small>
+                </div>
+              </div>
             </div>
-            <div class="card-footer text-end">
-              <small class="mb-0">
-                Alpha v.0.0.1
-              </small>
+            <br>
+
+            <div class="col-12 col-lg-6">
+              <div class="card shadow-sm p-5 mb-5 rounded">
+                <div class="card-body text-center">
+                  <h3 class="mb-3">
+                    Use my fridge/pantry
+                  </h3>
+                  <button @click="page=1" class="btn btm-sm btn-outline-primary">
+                    Scan Now!
+                  </button>
+                </div>
+              </div>
             </div>
+            <div class="col-12 col-lg-6">
+              <div class="card shadow-sm p-5 mb-5 rounded">
+                <div class="card-body text-center">
+                  <h3 class="mb-4">
+                    Use my tickets                    
+                  </h3>
+                  <small>(comming soon)</small>
+                  
+                </div>
+              </div>
+            </div>
+
           </div>
+
+
+
 
         </div>
 
@@ -130,7 +177,8 @@
                   <br>
                   <button :disabled="!isBtnEnabled" @click="selectImage" class="btn btn-outline-danger m-3">
                     Cancel</button>
-                  <button :disabled="!isBtnEnabled" @click="getRecipes" class="btn btn-primary m-3">Get Recipes
+                  <button :disabled="!isBtnEnabled" @click="getRecipes" class="btn btn-primary m-3">
+                    Get Recipes
                   </button>
                 </div>
               </div>
