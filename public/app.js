@@ -1,7 +1,7 @@
 const app = Vue.createApp({
     data() {
         return {
-            analysisResults: [],
+            analysisResults: {},
             imageUrl: null,
             isBtnEnabled: false,
             page: 'initial',
@@ -75,14 +75,17 @@ const app = Vue.createApp({
 
                 const { data } = await axios.post(`${this.enviroment}/api/images/analyze`, body)
 
-                const { ok, msg, foodFound } = data
+                const { ok, msg, imgDescription, foodFound } = data
 
                 if (!ok) {
                     this.analysisResults = {}
                 } else {
-                    this.analysisResults = this.getAnalysisResults(foodFound)
+                    this.analysisResults = {
+                        ingredients: this.getAnalysisResults(foodFound),
+                        description: imgDescription
+                    }
                 }
-                
+
                 let alertStatus = (ok) ? 'success' : 'error'
                 this.createAlerts(alertStatus, [msg])
                 this.page = 3
@@ -94,11 +97,18 @@ const app = Vue.createApp({
             this.isBtnEnabled = true
         },
         getAnalysisResults(ingredients) {
+            const invalidResults = ['Food', 'Fruit', 'Vegetables']
             const objects = ingredients.map((item) => {
                 return item.object;
-            });
+            });            
             // remove duplicates
-            return [...new Set(objects)];
+            let ingredientsFound = [...new Set(objects)];
+            // remove invalid results
+            ingredientsFound = ingredientsFound.filter((item) => {
+                return !invalidResults.includes(item);
+            });
+            
+            return ingredientsFound;
         },
         async getRecipes() {
             const currentPage = this.page
@@ -106,7 +116,7 @@ const app = Vue.createApp({
                 this.loadingData()
 
                 const body = {
-                    ingredients: this.analysisResults
+                    ingredients: this.analysisResults.ingredients
                 }
 
                 let { data } = await axios.post(`${this.enviroment}/api/recipes`, body)

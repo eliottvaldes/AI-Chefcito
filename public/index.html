@@ -171,8 +171,9 @@
                   <h3> Analysis Results </h3>
                   <hr>
                   <code class="mb-5">
-                    <h4>We found this ingredients in the photo... </h4>
-                    {{analysisResults}}
+                    <h4>We got this information from the photo... </h4>
+                    <h6><u>Description</u>: {{analysisResults.description}}</h6>
+                    <h6><u>Ingredients</u>: {{analysisResults.ingredients}}</h6>
                   </code>
                   <br>
                   <button :disabled="!isBtnEnabled" @click="selectImage" class="btn btn-outline-danger m-3">
@@ -233,8 +234,8 @@
                 <div class="card-body text-center">
                   <figure class="figure">
                     <img v-if="imageUrl" :src="imageUrl" id="recipes-img" class="figure-img img-fluid rounded" />
-                    <figcaption class="figure-caption">Image you upload</figcaption>
-                    <figcaption class="figure-caption">Recipe using ingredients: {{analysisResults }}</figcaption>
+                    <figcaption class="figure-caption"> "<i>{{analysisResults.description}}</i>" </figcaption>
+                    <figcaption class="figure-caption">Recipe using ingredients: {{analysisResults.ingredients }}</figcaption>
                   </figure>
                 </div>
               </div>
