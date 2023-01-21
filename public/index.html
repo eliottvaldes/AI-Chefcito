@@ -18,6 +18,9 @@
   <!-- fontawesome link -->
   <script src="https://kit.fontawesome.com/138878e8dd.js" crossorigin="anonymous"></script>
 
+  <!-- animate css link -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+
 </head>
 
 <body>
@@ -75,7 +78,7 @@
 
       <div class="row justify-content-center mb-5">
 
-        <div v-if="page=='initial'">
+        <div v-if="page=='initial'" class="animate__animated animate__zoomIn animate__delay-2s" >
           <div class="row justify-content-center">
 
             <div class="col-12 col-lg-6">
@@ -124,7 +127,7 @@
 
         </div>
 
-        <div v-if="page==1" class="col-12 mb-5">
+        <div v-if="page==1" class="col-12 mb-5 animate__animated animate__zoomInLeft">
 
           <div class="card shadow p-3 mb-5 rounded">
             <div class="card-header">
@@ -145,7 +148,7 @@
 
         </div>
 
-        <div v-if="page==2" class="col-12 mb-5">
+        <div v-if="page==2" class="col-12 mb-5 animate__animated animate__backInLeft">
           <div class="card shadow-sm p-3 mb-5">
             <div class="card-body text-center">
               <figure class="figure">
@@ -160,7 +163,7 @@
           </div>
         </div>
 
-        <div v-if="page==3" class="col-12 mb-5">
+        <div v-if="page==3" class="col-12 mb-5 animate__animated animate__backInLeft">
 
           <div class="card shadow-sm p-3 mb-5">
             <div class="card-body text-center">
@@ -389,7 +392,7 @@
         </div>
 
 
-        <div v-if="page==4" class="col-12 mb-5">
+        <div v-if="page==4" class="col-12 mb-5 animate__animated animate__backInLeft">
 
           <div class="row row-cols-1 row-cols-lg-2 justify-content-between">
 
@@ -455,7 +458,7 @@
         </div>
 
         <!-- show a loader -->
-        <div v-if="page=='loader'" class="col-12 mb-5">
+        <div v-if="page=='loader'" class="col-12 mb-5 animate__animated animate__bounceIn">
           <div class="card shadow p-3 mb-5">
             <div class="card-body text-center">
               <h3>Processing your data </h3>
