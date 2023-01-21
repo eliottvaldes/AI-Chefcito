@@ -8,10 +8,17 @@ const app = Vue.createApp({
             prompt: null,
             recipe: null,
             enviroment: null,
+            recipeType: 'basic',
+            showCustomizations: false,
+            showMoreCustomizations: false,
+            recipePreferences: {},
+            mealOptions: {},
         }
     },
     mounted() {
         this.getEnviorment()
+        this.mealOptions = this.getMealOptions()
+        this.recipePreferences = this.getRecipePreferences()
     },
     computed: {
         resultPrompt() {
@@ -26,7 +33,7 @@ const app = Vue.createApp({
         getEnviorment() {
             this.enviroment = (window.location.hostname.includes('localhost'))
                 ? 'http://localhost:3000'
-                : 'https://ai-chefcito-production.up.railway.app'
+                : 'http://localhost:3000'
         },
         verifyImage() {
             if (this.$refs.image.files.length > 0) {
@@ -100,14 +107,14 @@ const app = Vue.createApp({
             const invalidResults = ['Food', 'Fruit', 'Vegetables']
             const objects = ingredients.map((item) => {
                 return item.object;
-            });            
+            });
             // remove duplicates
             let ingredientsFound = [...new Set(objects)];
             // remove invalid results
             ingredientsFound = ingredientsFound.filter((item) => {
                 return !invalidResults.includes(item);
             });
-            
+
             return ingredientsFound;
         },
         async getRecipes() {
@@ -115,11 +122,23 @@ const app = Vue.createApp({
             try {
                 this.loadingData()
 
+                let urlEndPoint = `${this.enviroment}/api/recipes`
+
                 const body = {
                     ingredients: this.analysisResults.ingredients
                 }
 
-                let { data } = await axios.post(`${this.enviroment}/api/recipes`, body)
+                if (this.recipeType === 'custom') {
+                    const isValidPreferenceConfig = this.validateRecipePreferences()
+                    if (isValidPreferenceConfig) {
+                        body.customizations = this.recipePreferences
+                        urlEndPoint += '/custom'
+                    } else {
+                        alert('You dont have recipe customization, youll get a basic recipe')
+                    }
+                }
+
+                let { data } = await axios.post(urlEndPoint, body)
                 const { msg, prompt, result } = data
 
                 this.createAlerts('success', [msg])
@@ -203,7 +222,151 @@ const app = Vue.createApp({
                 html,
             })
 
-        }
+        },
+
+        // recipe methods       
+        getRecipePreferences() {
+            return {
+                preferences: {
+                    mealTime: 'no-preference',
+                    cuisine: 'no-preference',
+                    diet: [],
+                    mealType: 'no-preference',
+                },
+                preparationTime: {},
+                nutrition: {},
+                kitchenForniture: {},
+                diners: 1,
+            }
+        },
+        getMealOptions() {
+            return {
+                preferences: {
+                    mealTime: [
+                        'no-preference', 'breakfast', 'lunch', 'dinner', 'snack', 'teatime'
+                    ],
+                    cuisine: [
+                        'no-preference', 'african', 'american', 'british', 'cajun', 'chinese', 'french', 'german', 'greek', 'indian', 'irish', 'italian', 'jewish', 'japanese', 'korean', 'mexican', 'middle eastern', 'nordic', 'southern', 'spanish', 'thai', 'vietnamese'
+                    ],
+                    diet: [
+                        'no-preference', 'balanced', 'high-protein', 'high-fiber', 'low-fat', 'low-carb', 'low-sodium', 'low-sugar'
+                    ],
+                    mealType: [
+                        'no-preference', 'main course', 'side dish', 'dessert', 'appetizer', 'salad', 'bread', 'breakfast', 'soup', 'beverage', 'sauce', 'marinade', 'fingerfood', 'snack', 'drink'
+                    ],
+                },
+                preparationTime: {
+                    minReadyTime: 0,
+                    maxReadyTime: 0,
+                    minCookTime: 0,
+                    maxCookTime: 0,
+                    minPrepTime: 0,
+                    maxPrepTime: 0,
+                    minTotalTime: 0,
+                    maxTotalTime: 0,
+                },
+                nutrition: {
+                    minCarbs: 0,
+                    maxCarbs: 0,
+                    minFat: 0,
+                    maxFat: 0,
+                    minProtein: 0,
+                    maxProtein: 0,
+                    minSugar: 0,
+                    maxSugar: 0,
+                    minCalories: 0,
+                    maxCalories: 0,
+                },
+                kitchenForniture: {
+                    kitchenResources: [
+                        'no-preference', 'oven', 'blender', 'microwave', 'toaster', 'grill', 'griddle',
+                        'fryer', 'pressure cooker', 'slow cooker', 'food processor', 'juicer', 'spiralizer', 'coffee maker',
+                        'waffle maker', 'ice cream maker', 'stand mixer', 'hand mixer', 'food dehydrator', 'food scale',
+                        'measuring cups', 'measuring spoons', 'thermometer', 'colander', 'strainer', 'spatula', 'whisk',
+                        'peeler', 'can opener', 'bottle opener', 'corkscrew', 'ladle', 'tongs', 'masher', 'grater', 'zester',
+                        'sieve', 'chopper', 'slicer', 'knife', 'cutting board'
+                    ]
+
+                },
+                diners: 1,
+            }
+        },
+        removeRecipePreferences() {
+            this.recipePreferences = this.getRecipePreferences()
+        },
+        saveRecipePreferences() {
+            // validate recipe preferences
+            this.validateRecipePreferencesDiet()
+            this.validateRecipePreferencesKitchenResources()
+            // save recipe preferences in session storage
+            localStorage.setItem('recipePreferences', JSON.stringify(this.recipePreferences))
+
+        },
+        toggleShowCustomizations() {
+            this.showCustomizations = !this.showCustomizations
+        },
+        validateRecipePreferencesDiet() {
+            const diet = this.recipePreferences.preferences.diet
+            if (diet.length > 0) {
+                if (diet.includes('no-preference')) {
+                    this.recipePreferences.preferences.diet = ['no-preference']
+                }
+            }
+        },
+        validateRecipePreferencesKitchenResources() {
+            const kitchenResources = this.recipePreferences.kitchenForniture.kitchenResources
+            if (kitchenResources.length > 0) {
+                if (kitchenResources.includes('no-preference')) {
+                    this.recipePreferences.kitchenForniture.kitchenResources = ['no-preference']
+                }
+            }
+        },
+        validateRecipePreferences() {
+            let obj = JSON.stringify({ ...this.recipePreferences })
+            const localObj = this.clearRecipePreferences(JSON.parse(obj))
+            let isValidPreference = false
+            for (let key in localObj) {
+                if (localObj.hasOwnProperty(key)) {
+                    isValidPreference = true
+                }
+            }
+            return isValidPreference
+        },
+        clearRecipePreferences: (obj) => {
+            for (let [key, value] of Object.entries(obj)) {
+                if (typeof value === 'object') {
+                    // get the elemts of the object and validate if they are 
+                    for (let [key2, value2] of Object.entries(value)) {
+                        if (Array.isArray(value2)) {
+                            if (value2.length == 0) {
+                                delete obj[key][key2]
+                                continue
+                            }
+                            value2.forEach((val) => {
+                                if (val === 'no-preference') {
+                                    delete obj[key][key2]
+                                }
+                            });
+                            continue
+                        }
+                        if (value2 === 'no-preference' || !value2 || value2.length < 1) {
+                            delete obj[key][key2]
+                        }
+                    }
+                    if (Object.keys(value).length < 1) {
+                        delete obj[key]
+                    }
+                    continue;
+                }
+
+                if (value == 1) {
+                    delete obj[key]
+                }
+
+            }
+
+            return obj;
+        },
 
     },
 

@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>Image Information</title>
+  <title>Ai Chefcito</title>
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -26,7 +26,7 @@
       background-repeat: no-repeat;
       background-attachment: fixed;
       background-size: cover;
-     
+
     }
 
     #recipes-img {
@@ -77,7 +77,7 @@
 
             <div class="col-12 col-lg-6">
               <div id="welcome" class="card shadow p-3 mb-5 rounded">
-                <div class="card-body text-center">                
+                <div class="card-body text-center">
                   <p class="lead">This is a draft of the web application to create food recipes using Azure Cognitive
                     Services and OpenAI services </p>
                 </div>
@@ -106,10 +106,10 @@
               <div class="card shadow-sm p-5 mb-5 rounded">
                 <div class="card-body text-center">
                   <h3 class="mb-4">
-                    Use my tickets                    
+                    Use my tickets
                   </h3>
                   <small>(comming soon)</small>
-                  
+
                 </div>
               </div>
             </div>
@@ -163,27 +163,10 @@
             <div class="card-body text-center">
               <figure class="figure">
                 <img v-if="imageUrl" :src="imageUrl" id="analyzed-img" class="figure-img img-fluid rounded" />
-                <figcaption class="figure-caption">Image you upload</figcaption>
+                <figcaption class="figure-caption">Image selected</figcaption>
               </figure>
               <br class="mb-5">
-              <div v-if="Object.keys(analysisResults).length > 0" class="row justify-content-center">
-                <div class="col-8 mb-5">
-                  <h3> Analysis Results </h3>
-                  <hr>
-                  <code class="mb-5">
-                    <h4>We got this information from the photo...</h4>
-                    <h6><u>Description</u>: {{analysisResults.description}}</h6>
-                    <h6><u>Ingredients</u>: {{analysisResults.ingredients}}</h6>
-                  </code>
-                  <br>
-                  <button :disabled="!isBtnEnabled" @click="selectImage" class="btn btn-outline-danger m-3">
-                    Cancel</button>
-                  <button :disabled="!isBtnEnabled" @click="getRecipes" class="btn btn-primary m-3">
-                    Get Recipes
-                  </button>
-                </div>
-              </div>
-              <div v-else class="row justify-content-center">
+              <div v-if="Object.keys(analysisResults).length < 1" class="row justify-content-center">
                 <div class="col-8 mb-5">
                   <h3> Analysis Results </h3>
                   <hr>
@@ -195,6 +178,206 @@
                     Select another image
                   </button>
                 </div>
+              </div>
+              <div v-else class="row justify-content-center">
+
+                <div class="col-10 mb-5">
+                  <h3> Analysis Results </h3>
+                  <hr>
+                  <code class="mb-5">
+                    <h4 class="mb-3">We got this information from the photo... </h4>
+                    <h6><u>Description</u>: {{analysisResults.description}}</h6>
+                    <h6><u>Ingredients</u>: {{analysisResults.ingredients}}</h6>
+                  </code>
+                  <br>
+                  <button :disabled="!isBtnEnabled" @click="selectImage" class="btn btn-sm btn-outline-danger">
+                    Select another image
+                  </button>
+                </div>
+                <div class="row mt-4">
+                  <div class="col-12">
+
+                    <h2>Recipe Preferences</h2>
+                    <hr>
+                    <div id="preferences" class="text-start">
+                      <label class="form-check-label">
+                        * Select the type of recipe you want to create
+                      </label>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" id="basic" value="basic" v-model="recipeType">
+                        <label class="form-check-label" for="">
+                          Basic
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio" id="custom" value="custom" v-model="recipeType">
+                        <label class="form-check-label" for="">
+                          Custom
+                        </label>
+                      </div>
+                      <div v-if="recipeType=='custom'" class="">
+
+                        <div class="my-4">
+
+                          <div class="col-12">
+                            <span>
+                              <p>
+                                You can customize your recipe by adding
+                                a diet, cuisine, nutrition and other preferences.
+                                <br>
+                                <small class="text-muted">
+                                  * Leave the fields empty if you don't have any preference.
+                                </small>
+                              </p>
+                            </span>
+
+                            <br>
+                          </div>
+
+
+                          <div v-if="!showCustomizations" class="col-12">
+                            <div class="d-grid gap-2">
+                              <button class="btn btn-sm btn-primary" type="button" disabled>
+                                Use my preferences (coming soon)
+                              </button>
+                              <button @click="toggleShowCustomizations()" class="btn btn-primary" type="button">
+                                Show customizations
+                              </button>
+                            </div>
+                          </div>
+
+                          <div v-else>
+
+                            <div class="col-12 mb-5">
+                              <div v-for="(options, category) in mealOptions.preferences">
+                                <h5>{{category}}</h5>
+                                <div v-if="category!='diet'">
+                                  <select v-model="recipePreferences.preferences[category]" class="form-select">
+                                    <option v-for="option in options" :key="option" :value="option" :key="option">{{
+                                      option
+                                      }}</option>
+                                  </select>
+                                </div>
+                                <div v-else>
+                                  <div v-for="option in options" :key="option" class="form-check-inline">
+                                    <input :id="option" :value="option"
+                                      v-model="recipePreferences.preferences[category]"
+                                      @change="validateRecipePreferencesDiet()" class="form-check-input" type="checkbox"
+                                      role="switch" id="flexSwitchCheckDefault">
+                                    <label :for="option" class="form-check-label ml-2" for="flexSwitchCheckDefault">
+                                      {{ option }}
+                                    </label>
+                                  </div>
+                                </div>
+                                <br>
+                              </div>
+
+                              <div class="form-check form-switch float-start">
+                                <input @click="showMoreCustomizations = !showMoreCustomizations"
+                                  class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                                <label v-if="!showMoreCustomizations" class="form-check-label"
+                                  for="flexSwitchCheckDefault">Show
+                                  more options </label>
+                                <label v-if="showMoreCustomizations" class="form-check-label"
+                                  for="flexSwitchCheckDefault">Hide
+                                  options </label>
+                              </div>
+
+                            </div>
+
+
+                            <div v-if="showMoreCustomizations" class="col-12 mb-5">
+
+                              <h5>Time </h5>
+
+                              <label for="" class="form-label">Max Preparation Time</label>
+                              <div class="input-group mb-3">
+                                <input v-model.number="recipePreferences.preparationTime.maxPrepTime" type="text"
+                                  inputmode="numeric" name="" id="" class="form-control" placeholder=""
+                                  aria-describedby="helpId">
+                                <span class="input-group-text">minutes</span>
+                              </div>
+
+                              <h5 class="mt-4">Nutrition </h5>
+
+                              <label for="" class="form-label">Calories</label>
+                              <div class="input-group mb-3">
+                                <input v-model.number="recipePreferences.nutrition.maxCalories" type="text"
+                                  inputmode="numeric" class="form-control" aria-label="Max Calories">
+                                <span class="input-group-text">kcal</span>
+                              </div>
+
+                              <label for="" class="form-label">Carbohydrates</label>
+                              <div class="input-group mb-3">
+                                <input v-model.number="recipePreferences.nutrition.maxCarbs" type="text"
+                                  inputmode="numeric" class="form-control" aria-label="Max Carbohydrates">
+                                <span class="input-group-text">grams</span>
+                              </div>
+
+                              <label for="" class="form-label">Protein</label>
+                              <div class="input-group mb-3">
+                                <input v-model.number="recipePreferences.nutrition.maxProtein" type="text"
+                                  inputmode="numeric" class="form-control" aria-label="Max Protein">
+                                <span class="input-group-text">grams</span>
+                              </div>
+
+                              <h5 class="mt-4">Diners </h5>
+
+                              <label for="" class="form-label">Number of diners</label>
+                              <div class="input-group mb-3">
+                                <input v-model.number="recipePreferences.diners" type="text" inputmode="numeric"
+                                  class="form-control" aria-label="diners">
+                              </div>
+
+                              <div class="form-check form-switch float-start">
+                                <input @click="showMoreCustomizations = !showMoreCustomizations"
+                                  class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+                                <label v-if="showMoreCustomizations" class="form-check-label"
+                                  for="flexSwitchCheckDefault">
+                                  Hide options
+                                </label>
+                              </div>
+
+                            </div>
+
+                            <div class="col-12 mt-3">
+                              <div class="d-grid gap-2 d-md-block">
+                                <button @click="removeRecipePreferences()" class="btn btn-sm btn-outline-danger"
+                                  type="button">
+                                  Remove preferences
+                                </button>
+                                <button class="btn btn-sm btn-outline-primary mb-3" type="button" disabled>
+                                  Save preferences (coming soon)
+                                </button>
+                                <button @click="toggleShowCustomizations()" class="btn btn-primary" type="button">
+                                  Complete customization
+                                </button>
+                              </div>
+                            </div>
+
+                          </div>
+
+                        </div>
+
+
+                      </div>
+                      <hr class="mb-3">
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="" disabled>
+                        <label class="form-check-label" for="">
+                          Use medical history <small>(coming soon)</small>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  <button :disabled="!isBtnEnabled" @click="getRecipes" class="btn btn-primary mt-3">
+                    Get recipe
+                  </button>
+
+                </div>
+
+
+
               </div>
 
             </div>
@@ -221,9 +404,16 @@
                   </div>
                 </div>
                 <div class="card-footer">
-                  <button :disabled="!isBtnEnabled" @click="getRecipes" class="btn btn-outline-primary float-end">
-                    Get another recipe!
-                  </button>
+                  <div class="d-grid gap-2">
+                    <button :disabled="!isBtnEnabled" @click="getRecipes" class="btn btn-outline-primary">
+                      Get another recipe!
+                    </button>
+                    <button :disabled="!isBtnEnabled" @click="page--" class="btn btn-outline-info">
+                      Customize preferences
+                    </button>
+                  </div>
+
+
                 </div>
               </div>
 
@@ -235,7 +425,8 @@
                   <figure class="figure">
                     <img v-if="imageUrl" :src="imageUrl" id="recipes-img" class="figure-img img-fluid rounded" />
                     <figcaption class="figure-caption"> "<i>{{analysisResults.description}}</i>" </figcaption>
-                    <figcaption class="figure-caption">Recipe using ingredients: {{analysisResults.ingredients }}</figcaption>
+                    <figcaption class="figure-caption">Recipe using ingredients: {{analysisResults.ingredients }}
+                    </figcaption>
                   </figure>
                 </div>
               </div>
