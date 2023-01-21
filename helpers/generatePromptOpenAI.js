@@ -38,9 +38,9 @@ const dinersPrompt = (prompt, diners) => {
 
 
 // f' to generate a full prompt that matches the user preferences - Flexible Version
-const createCustomizedPrompt = (userPreferences) => {
+const createCustomizedPrompt = (ingredients, userPreferences ) => {
     if (Object.keys(userPreferences).length === 0) return prompt;
-    const { preferences, preparationTime, nutrition, kitchenForniture, ingredients } = userPreferences;
+    const { preferences, preparationTime, nutrition, kitchenForniture } = userPreferences;
 
     let prompt = `Write a recipe that fits the following preferences: `;
     prompt = arrayPromt(prompt, { ...preferences });
@@ -64,7 +64,7 @@ const generatePrompt = (ingredients = [], customizations = {}) => {
     if (!customizations || Object.keys(customizations).length === 0) {
         return createBasicPrompt(ingredients);
     }
-    return createCustomizedPrompt(customizations);
+    return createCustomizedPrompt(ingredients, customizations);
 }
 
 module.exports = {
