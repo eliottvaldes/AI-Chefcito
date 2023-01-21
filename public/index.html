@@ -15,6 +15,9 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.0/dist/sweetalert2.all.min.js" async defer></script>
   <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 
+  <!-- fontawesome link -->
+  <script src="https://kit.fontawesome.com/138878e8dd.js" crossorigin="anonymous"></script>
+
 </head>
 
 <body>
@@ -402,6 +405,19 @@
                   <div>
                     <p v-for="(line, index) in resultRecipe " :key="index" class="text-break">{{ line }}</p>
                   </div>
+                  <br>
+                  <div class="btn-group float-end" role="group" aria-label="Basic mixed styles example">
+                    <button disabled type="button" class="btn btn-sm btn-outline-dark">
+                      <i class="fa-solid fa-bookmark"></i>
+                    </button>
+                    <button disabled type="button" class="btn btn-sm btn-outline-dark">
+                      <i class="fa-solid fa-share"></i>
+                    </button>
+                    <button type="button" class="btn btn-sm btn-success" onclick="nextFeauturesAlert()">
+                      <i class="fa-solid fa-circle-play"></i>
+                    </button>
+                  </div>
+
                 </div>
                 <div class="card-footer">
                   <div class="d-grid gap-2">
@@ -461,6 +477,18 @@
   <!-- app.js -->
   <script type="text/javascript" src="./app.js"></script>
 
+  <script>
+    const nextFeauturesAlert = () => {
+      Swal.fire({
+        title: 'Ups! Feature not available yet',
+        text: 'Soon you will be able to choose to read or listen step by step to the instructions to prepare your recipe!',
+        imageUrl: 'https://picsum.photos/400/200',
+        imageWidth: 400,
+        imageHeight: 200,
+        imageAlt: 'Random image',
+      })
+    }
+  </script>
 
 
 
