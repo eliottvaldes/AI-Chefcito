@@ -15,9 +15,9 @@ const getRecipeOpenAI = async (ingredients = [], cutomizations = {}) => {
         const { data } = await openai.createCompletion({
             model: "text-davinci-003",
             prompt,
-            temperature: 1,
+            temperature: 0.9,
             max_tokens: 500,
-            top_p: 8.0,
+            top_p: 0.8,
             frequency_penalty: 0.0,
             presence_penalty: 0.0,
         });
