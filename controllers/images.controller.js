@@ -100,20 +100,23 @@ const analyzeImageOpenAI = async (req = request, res = response) => {
         });
     }
 
-    /* const response = await getIngredientsOpenAI(image);
+    const response = await getIngredientsOpenAI(image);
 
     if (!response.ok) {
         return res.status(400).json({
             ok: false,
             msg: 'There was an error while image analysis'
         });
-    } */
+    }
 
+    /* 
+    // test data
     const response = {
         ok: true,
         msg: 'Recipes retrieved successfully',
         data: '{"imgDescription": "Variety fresh colorful food", "foodFound": ["watermelon", "banana", "pineapple", "strawberries", "melon", "pomegranate", "plum", "lemon", "bread", "pasta", "chicken breast", "steak", "fish", "cheese", "ham", "milk", "blackberries", "tomato", "green bell pepper", "onion", "potato", "carrot", "broccoli", "red cabbage", "green beans", "red bell pepper"]}'
-    }    
+    }     
+    */
 
     const { imgDescription, foodFound } = parseJSONToObject(response.data);
 
