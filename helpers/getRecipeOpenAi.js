@@ -1,36 +1,53 @@
-const { Configuration, OpenAIApi } = require("openai");
+require('dotenv').config();
+
 const { generatePrompt } = require("./generatePromptOpenAI");
+const OpenAI = require("openai");
 
-const configuration = new Configuration({
-    apiKey: process.env.OPENAI_API_KEY,
-});
+// Inicializa OpenAI con la API key desde las variables de entorno
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
+const apiRequest = async (prompt) => {
+    try {
+        const completion = await openai.chat.completions.create({
+            messages: [
+                {
+                    role: "system",
+                    content: "Respira profundo, lee lentamente y piensa paso a paso. Actua como un nutriologo. Debes de ser capaz de hacer una receta unica y exlcusivamente con los ingredientes que te proporcionen. Recuerda que unicamente debes ocupar los ingredientes proporcionados, no debes ocupar otros para las recetas."
+                },
+                {
+                    role: "user",
+                    content: prompt
+                }
+            ],
+            model: "gpt-3.5-turbo",
+        });
+
+        return completion.choices[0].message.content ?? '';
+    } catch (error) {
+        return '';
+    }
+}
 
 
 const getRecipeOpenAI = async (ingredients = [], cutomizations = {}) => {
 
     try {
-        const openai = new OpenAIApi(configuration);
-        const prompt = generatePrompt(ingredients, cutomizations);        
-        const { data } = await openai.createCompletion({
-            model: "text-davinci-003",
-            prompt,
-            temperature: 0.9,
-            max_tokens: 500,
-            top_p: 0.8,
-            frequency_penalty: 0.0,
-            presence_penalty: 0.0,
-        });
+        const prompt = generatePrompt(ingredients, cutomizations);
+        const recipe = await apiRequest(prompt);
+        if (!recipe) {
+            return { ok: false };
+        }
 
         return {
             ok: true,
             msg: 'Recipes retrieved successfully',
             prompt,
-            result: data.choices[0].text
+            result: recipe
         }
 
     } catch (error) {
-        return {ok: false};
+        console.log(error);
+        return { ok: false };
     }
 
 }
