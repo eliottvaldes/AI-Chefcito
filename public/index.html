@@ -78,7 +78,7 @@
 
       <div class="row justify-content-center mb-5">
 
-        <div v-if="page=='initial'" class="animate__animated animate__zoomIn animate__delay-2s" >
+        <div v-if="page=='initial'" class="animate__animated animate__zoomIn animate__delay-2s">
           <div class="row justify-content-center">
 
             <div class="col-12 col-lg-6">
@@ -157,8 +157,12 @@
               </figure>
               <br>
               <button :disabled="!isBtnEnabled" @click="selectImage" class="btn btn-outline-danger m-3"> Cancel</button>
-              <button :disabled="!isBtnEnabled" @click="analyzeImage" class="btn btn-primary m-3"> Analyze
-                Image</button>
+              <button :disabled="!isBtnEnabled" @click="analyzeImage" class="btn btn-primary m-3">
+                Analyze Image (Azure Cognitive Services)
+              </button>
+              <button :disabled="!isBtnEnabled" @click="analyzeImageOpenIA" class="btn btn-primary m-3">
+                Analyze Image (OpenAI Image Detection)
+              </button>
             </div>
           </div>
         </div>
@@ -371,7 +375,7 @@
                       <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="" id="" disabled>
                         <label class="form-check-label" for="">
-                          Use medical history <small>(coming soon)</small>
+                          Use medical preferences <small>(coming soon)</small>
                         </label>
                       </div>
                     </div>
