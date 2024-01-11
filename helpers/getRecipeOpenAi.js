@@ -3,23 +3,22 @@ require('dotenv').config();
 const { generatePrompt } = require("./generatePromptOpenAI");
 const OpenAI = require("openai");
 
-// Inicializa OpenAI con la API key desde las variables de entorno
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-const apiRequest = async (prompt) => {
+const apiRequest = async (model, systemContent, userContent) => {
     try {
         const completion = await openai.chat.completions.create({
             messages: [
                 {
                     role: "system",
-                    content: "Respira profundo, lee lentamente y piensa paso a paso. Actua como un nutriologo. Debes de ser capaz de hacer una receta unica y exlcusivamente con los ingredientes que te proporcionen. Recuerda que unicamente debes ocupar los ingredientes proporcionados, no debes ocupar otros para las recetas."
+                    content: systemContent
                 },
                 {
                     role: "user",
-                    content: prompt
+                    content: userContent
                 }
             ],
-            model: "gpt-3.5-turbo",
+            model,
         });
 
         return completion.choices[0].message.content ?? '';
@@ -32,8 +31,10 @@ const apiRequest = async (prompt) => {
 const getRecipeOpenAI = async (ingredients = [], cutomizations = {}) => {
 
     try {
-        const prompt = generatePrompt(ingredients, cutomizations);
-        const recipe = await apiRequest(prompt);
+        const userContent = generatePrompt(ingredients, cutomizations);
+        const model = "gpt-3.5-turbo";
+        const systemContent = "Respira profundo, lee lentamente y piensa paso a paso. Actua como un nutriologo. Debes de ser capaz de hacer una receta unica y exlcusivamente con los ingredientes que te proporcionen. Recuerda que unicamente debes ocupar los ingredientes proporcionados, no debes ocupar otros para las recetas.";
+        const recipe = await apiRequest(model, systemContent, userContent);
         if (!recipe) {
             return { ok: false };
         }
@@ -41,7 +42,7 @@ const getRecipeOpenAI = async (ingredients = [], cutomizations = {}) => {
         return {
             ok: true,
             msg: 'Recipes retrieved successfully',
-            prompt,
+            prompt: userContent,
             result: recipe
         }
 
