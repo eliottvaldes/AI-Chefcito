@@ -60,7 +60,7 @@ const app = Vue.createApp({
                 formData.append('fileUpload', file)
 
                 let { data } = await axios.put(`${this.enviroment}/api/images/upload`, formData)
-                const { msg, url } = data
+                let { msg, url } = data
 
                 this.createAlerts('success', [msg])
                 this.imageUrl = url
@@ -89,13 +89,18 @@ const app = Vue.createApp({
                 const { data } = await axios.post(`${this.enviroment}/api/images/analyze`, body)
                 console.log(data)
 
-                const { ok, msg, imgDescription, foodFound } = data
+                let { ok, msg, imgDescription, foodFound } = data
+
+                const ingredients = this.getAnalysisResults(foodFound);
+                if(ingredients.length < 1) {
+                    ok = false;
+                }
 
                 if (!ok) {
                     this.analysisResults = {}
                 } else {
                     this.analysisResults = {
-                        ingredients: this.getAnalysisResults(foodFound),
+                        ingredients,
                         description: imgDescription
                     }
                 }
@@ -123,14 +128,24 @@ const app = Vue.createApp({
 
                 console.log(data)
 
-                const { ok, msg, imgDescription, foodFound } = data
+                let { ok, msg, imgDescription, foodFound } = data
+
+                const ingredients = foodFound ?? [];
+                if(ingredients.length < 1) {
+                    ok = false;
+                }
+
+                const description = imgDescription ?? '';
+                if(description.length < 1) {
+                    ok = false;
+                }
 
                 if (!ok) {
                     this.analysisResults = {}
                 } else {
                     this.analysisResults = {
-                        ingredients: foodFound,
-                        description: imgDescription,
+                        ingredients,
+                        description,
                         data
                     }
                 }
