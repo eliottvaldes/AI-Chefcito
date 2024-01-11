@@ -162,6 +162,9 @@ const app = Vue.createApp({
         },
         getAnalysisResults(ingredients) {
             const invalidResults = ['Food', 'Fruit', 'Vegetables']
+            if (!ingredients) {
+                return [];
+            }
             const objects = ingredients.map((item) => {
                 return item.object;
             });
