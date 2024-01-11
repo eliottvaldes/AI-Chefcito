@@ -6,7 +6,8 @@ const { validateFileToUpload } = require('../middlewares/validateFile');
 
 const {
     uploadImage,
-    analizaImage
+    analizaImage,
+    analyzeImageOpenAI
 } = require('../controllers/images.controller');
 
 const router = Router();
@@ -27,6 +28,13 @@ router.post('/analyze',
     ]
     , analizaImage);
 
+router.post('/analyze-openai',
+    [
+        check('image', 'Image is required').not().isEmpty(),
+        check('image', 'Image url must be valid').isURL(),
+        validateFields
+    ]
+    , analyzeImageOpenAI);
 
 
 module.exports = router;
