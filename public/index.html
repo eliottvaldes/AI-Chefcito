@@ -28,7 +28,7 @@
   <style>
     body {
 
-      background-image: url('./bg_image.png');
+      background-image: url('../images/bg_image.png');
       background-repeat: no-repeat;
       background-attachment: fixed;
       background-size: cover;
@@ -84,11 +84,21 @@
             <div class="col-12 col-lg-6">
               <div id="welcome" class="card shadow p-3 mb-5 rounded">
                 <div class="card-body text-center">
-                  <p class="lead">This is a draft of the web application to create food recipes using Azure Cognitive
-                    Services and OpenAI services </p>
+                  <p class="lead">
+                    Welcome to <strong><i>AI Chefcito</i></strong>! Your personalized kitchen assistant where <strong>AI
+                      innovation meets culinary delight</strong>. <mark>Transform photos of your fridge/pantry items
+                      into delectable recipes</mark> with the power of Cloud services and OpenAI services integration.
+                    <br>
+                    <!-- integrate an image with responsive width -->
+                    <img src="../images/food.webp" class="img-fluid my-3" alt="Responsive image">
+                    <br>
+                    <strong>Simple, intuitive, and ever-evolving</strong> - <i>AI Chefcito</i> turns your food concepts
+                    into reality with just a click. <strong><span style="color: #27ae60;">Start your culinary adventure
+                        today</span></strong> and unveil the potential of your pantry!
+                  </p>
                 </div>
                 <div class="card-footer text-end">
-                  <small class="mb-0">
+                  <small class="mb-0 text-muted">
                     Alpha v.0.0.2
                   </small>
                 </div>
@@ -97,25 +107,24 @@
             <br>
 
             <div class="col-12 col-lg-6">
-              <div class="card shadow-sm p-5 mb-5 rounded">
+              <div class="card shadow-lg p-5 mb-5 bg-white rounded">
                 <div class="card-body text-center">
-                  <h3 class="mb-3">
-                    Use my fridge/pantry
+                  <h3 class="mb-3" style="color: #3498db;">
+                    <strong>Snap a photo of your fridge, pantry, or ingredients</strong>
                   </h3>
-                  <button @click="page=1" class="btn btm-sm btn-outline-primary">
-                    Scan Now!
+                  <button @click="page=1" class="btn btn-primary">
+                    <i class="bi bi-camera"></i> Scan Now!
                   </button>
                 </div>
               </div>
             </div>
             <div class="col-12 col-lg-6">
-              <div class="card shadow-sm p-5 mb-5 rounded">
+              <div class="card shadow-lg p-5 mb-5 bg-white rounded">
                 <div class="card-body text-center">
-                  <h3 class="mb-4">
-                    Use my tickets
+                  <h3 class="mb-4" style="color: #95a5a6;">
+                    Snap a photo of your ticket or receipt
                   </h3>
-                  <small>(comming soon)</small>
-
+                  <small style="color: #e74c3c;">(coming soon)</small>
                 </div>
               </div>
             </div>
@@ -156,7 +165,8 @@
                 <figcaption class="figure-caption">Image you upload</figcaption>
               </figure>
               <br>
-              <button :disabled="!isBtnEnabled" @click="selectImage" class="btn btn-outline-danger m-3"> Cancel</button>
+              <button :disabled="!isBtnEnabled" @click="selectImage" class="btn btn-outline-danger m-3">
+                Cancel</button>
               <button :disabled="!isBtnEnabled" @click="analyzeImage" class="btn btn-primary m-3">
                 Analyze Image (Azure Cognitive Services)
               </button>
