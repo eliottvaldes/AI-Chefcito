@@ -21,13 +21,15 @@
   <!-- animate css link -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
 
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
 
   <style>
     body {
-
+      font-family: 'Poppins', sans-serif;
       background-image: url('../images/bg_image.png');
       background-repeat: no-repeat;
       background-attachment: fixed;
@@ -64,11 +66,13 @@
     }
   </style>
 
-  <nav class="navbar bg-body-tertiary" style="background-color: rgba(255, 255, 255, 0.933);">
+  <nav class="navbar bg-body-tertiary" style="background-color: rgba(255, 255, 255, 0.92);">
     <div class="container-fluid">
       <a class="navbar-brand"><i>AI</i> Chefcito!</a>
       <form class="d-flex" role="search">
-        <button class="btn btn-outline-success" type="submit">My account</button>
+        <!-- insert the ../images/logo.png bit in a circular shape and responsive to the navbar -->
+        <img src="../images/logo.png" class="img-fluid rounded-circle" alt="Responsive image" width="65px"
+          height="65px">
       </form>
     </div>
   </nav>
