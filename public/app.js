@@ -38,8 +38,8 @@ const app = Vue.createApp({
     methods: {
         getEnviorment() {
             this.enviroment = (window.location.hostname.includes('localhost'))
-                ? 'http://localhost:3000'
-                : 'http://localhost:3000'
+                ? 'http://localhost:3000'                
+                : `${window.location.protocol}//${window.location.hostname}:${window.location.port}`
         },
         verifyImage() {
             if (this.$refs.image.files.length > 0) {
@@ -92,7 +92,7 @@ const app = Vue.createApp({
                 let { ok, msg, imgDescription, foodFound } = data
 
                 const ingredients = this.getAnalysisResults(foodFound);
-                if(ingredients.length < 1) {
+                if (ingredients.length < 1) {
                     ok = false;
                 }
 
@@ -131,12 +131,12 @@ const app = Vue.createApp({
                 let { ok, msg, imgDescription, foodFound } = data
 
                 const ingredients = foodFound ?? [];
-                if(ingredients.length < 1) {
+                if (ingredients.length < 1) {
                     ok = false;
                 }
 
                 const description = imgDescription ?? '';
-                if(description.length < 1) {
+                if (description.length < 1) {
                     ok = false;
                 }
 
