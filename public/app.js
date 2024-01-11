@@ -5,6 +5,12 @@ const app = Vue.createApp({
             imageUrl: null,
             isBtnEnabled: false,
             page: 'initial',
+            /* 
+            // test data
+            imageUrl: "https://res.cloudinary.com/drplgwglb/image/upload/v1704979133/jvesfy10xjrzvjelgbep.jpg",
+            isBtnEnabled: true,
+            page: 2, 
+            */
             prompt: null,
             recipe: null,
             enviroment: null,
@@ -81,6 +87,7 @@ const app = Vue.createApp({
                 }
 
                 const { data } = await axios.post(`${this.enviroment}/api/images/analyze`, body)
+                console.log(data)
 
                 const { ok, msg, imgDescription, foodFound } = data
 
@@ -90,6 +97,41 @@ const app = Vue.createApp({
                     this.analysisResults = {
                         ingredients: this.getAnalysisResults(foodFound),
                         description: imgDescription
+                    }
+                }
+
+                let alertStatus = (ok) ? 'success' : 'error'
+                this.createAlerts(alertStatus, [msg])
+                this.page = 3
+
+            } catch (error) {
+                this.catchErrors(error);
+                this.page = currentPage
+            }
+            this.isBtnEnabled = true
+        },
+        async analyzeImageOpenIA() {
+            const currentPage = this.page
+            try {
+                this.loadingData()
+
+                const body = {
+                    image: this.imageUrl
+                }
+
+                const { data } = await axios.post(`${this.enviroment}/api/images/analyze-openai`, body)
+
+                console.log(data)
+
+                const { ok, msg, imgDescription, foodFound } = data
+
+                if (!ok) {
+                    this.analysisResults = {}
+                } else {
+                    this.analysisResults = {
+                        ingredients: foodFound,
+                        description: imgDescription,
+                        data
                     }
                 }
 
