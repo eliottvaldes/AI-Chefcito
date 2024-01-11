@@ -38,7 +38,7 @@ const getRecipeOpenAI = async (ingredients = [], cutomizations = {}) => {
     try {
         const userContent = generatePrompt(ingredients, cutomizations);
         const model = "gpt-3.5-turbo";
-        const systemContent = "Respira profundo, lee lentamente y piensa paso a paso. Actua como un nutriologo. Debes de ser capaz de hacer una receta unica y exlcusivamente con los ingredientes que te proporcionen. Recuerda que unicamente debes ocupar los ingredientes proporcionados, no debes ocupar otros para las recetas.";
+        const systemContent = "Eres un nutriologo experto en generar recetas de cocina.";
         const recipe = await apiRequest(model, systemContent, userContent);
         if (!recipe) {
             return { ok: false };
