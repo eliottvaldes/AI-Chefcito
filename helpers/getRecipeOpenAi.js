@@ -38,7 +38,7 @@ const getRecipeOpenAI = async (ingredients = [], cutomizations = {}) => {
     try {
         const userContent = generatePrompt(ingredients, cutomizations);
         const model = "gpt-3.5-turbo";
-        const systemContent = "Eres un nutriologo experto en generar recetas de cocina.";
+        const systemContent = "You are a nutritionist expert in creating recipes for cooking.";
         const recipe = await apiRequest(model, systemContent, userContent);
         if (!recipe) {
             return { ok: false };
@@ -67,7 +67,7 @@ const getIngredientsOpenAI = async (imageUrl) => {
         const userContent = [
             {
                 'type': 'text',
-                'text': 'Identifica todos los alimentos que hay en la imagen. Genera una descripción de 5 palabras y un arreglo de los alimentos encontrados. responde estrictamente con un objeto que tenga la estructura: {"imgDescription": description, "foodFound": []}. No respondas nada más que el objeto pero en formato de texto plano.'
+                'text': 'Identify all the foods in the image. Generate a 5-word description and an array of the found foods. Strictly respond with an object having the structure: {"imgDescription": description, "foodFound": []}. Do not provide anything else but the object in plain text format.'
             },
             {
                 'type': 'image_url',
@@ -77,7 +77,7 @@ const getIngredientsOpenAI = async (imageUrl) => {
             }
         ];
         const model = 'gpt-4-vision-preview';
-        const systemContent = 'Eres un valioso asistente especializado en analizar imagenes de comida.';
+        const systemContent = 'You are a valuable assistant specialized in analyzing food images.';
         let ingredients = await apiRequest(model, systemContent, userContent);
         if (!ingredients) {
             return { ok: false };
