@@ -67,7 +67,7 @@ const getIngredientsOpenAI = async (imageUrl) => {
         const userContent = [
             {
                 'type': 'text',                
-                'text': 'Identifica toda la comida en la imagen. Genera una descripción de 5 palabras y un arreglo con los ingredientes encontrados. Responde estrictamente con un objeto con la siguiente estructura: {"imgDescription": description, "foodFound": []}. No respondas nada más. El objeto debe de tener un formato en texto plano.'
+                'text': 'Identifica toda la comida en la imagen. Genera una descripción de 5 palabras y un arreglo con los ingredientes encontrados. Responde estrictamente con un objeto con la siguiente estructura: {"imgDescription": descripción, "foodFound": []}. La descripción y los ingredientes deben estar en español. No respondas nada más. El objeto debe de tener un formato en texto plano.'
             },
             {
                 'type': 'image_url',
