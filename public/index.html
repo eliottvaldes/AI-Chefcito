@@ -173,16 +173,17 @@
             <div class="card-body text-center">
               <figure class="figure">
                 <img v-if="imageUrl" :src="imageUrl" id="uploaded-img" class="figure-img img-fluid rounded" />
-                <figcaption class="figure-caption">Image you upload</figcaption>
+                <figcaption class="figure-caption">Imagen seleccionada</figcaption>
               </figure>
               <br>
               <button :disabled="!isBtnEnabled" @click="selectImage" class="btn btn-outline-danger m-3">
-                Cancel</button>
-              <button :disabled="!isBtnEnabled" @click="analyzeImage" class="btn btn-primary m-3">
-                Analyze Image (Azure Cognitive Services)
+                Utilizar otra imagen
               </button>
+             <!--  <button :disabled="!isBtnEnabled" @click="analyzeImage" class="btn btn-primary m-3">
+                Analyze Image (Azure Cognitive Services)
+              </button> -->
               <button :disabled="!isBtnEnabled" @click="analyzeImageOpenIA" class="btn btn-primary m-3">
-                Analyze Image (OpenAI Image Detection)
+                Analizar imagen
               </button>
             </div>
           </div>
