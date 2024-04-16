@@ -3,7 +3,7 @@ const arrayPromt = (prompt, preferences) => {
     if (Object.keys(preferences).length === 0) return prompt;
 
     for (let [key, value] of Object.entries(preferences)) {
-        if (value === "no-preference") continue;
+        if (value === "sin-preferencia") continue;
         if (Array.isArray(value)) value = value.join(', ');
         prompt += `\n- ${key}: ${value}`;
     }
@@ -23,7 +23,7 @@ const numberPromt = (prompt, preferences) => {
 // f' to generate prompts for fields that contains ingredients
 const ingredientsPrompt = (prompt, ingredients) => {
     if (ingredients.length === 0) return prompt;
-    prompt += `\nUse only some of the following ingredients: `;
+    prompt += `\nLimitate estrictamente a usar únicamente todos o algunos de los siguientes ingredientes: `;
     prompt += `\n- ${ingredients.join(', ')}`;
     return prompt;
 
@@ -31,8 +31,8 @@ const ingredientsPrompt = (prompt, ingredients) => {
 
 const dinersPrompt = (prompt, diners) => {
     if (diners === 0) return prompt;
-    const qntDiners = diners === 1 ? 'person' : 'people';
-    prompt += `\n- diners: ${diners} ${qntDiners}`;
+    const qntDiners = diners === 1 ? 'persona' : 'personas';
+    prompt += `\n- Cantidad de comensales: ${diners} ${qntDiners}`;
     return prompt;
 }
 
@@ -41,21 +41,23 @@ const dinersPrompt = (prompt, diners) => {
 const createCustomizedPrompt = (ingredients, userPreferences ) => {
     if (Object.keys(userPreferences).length === 0) return prompt;
     const { preferences, preparationTime, nutrition, kitchenForniture } = userPreferences;
-
-    let prompt = `Write a recipe that fits the following preferences: `;
+    let prompt = `Escribe una receta que cumpla estrictamente con las siguientes preferencias: `;
     prompt = arrayPromt(prompt, { ...preferences });
     prompt = numberPromt(prompt, { ...preparationTime });
     prompt = numberPromt(prompt, { ...nutrition });
     prompt = arrayPromt(prompt, { ...kitchenForniture });
     prompt = dinersPrompt(prompt, userPreferences.diners);
     prompt = ingredientsPrompt(prompt, [...ingredients]);
+    prompt += '\n\nLa receta debe ser clara y concisa. Debe de mostrar los ingredientes ocupados y el procedimiento extendido de preparación.';
 
     return prompt;
 }
 
 const createBasicPrompt = (ingredients) => {
-    let prompt = `Write a recipe `;
-    return ingredientsPrompt(prompt, [...ingredients]);
+    let prompt = `Escribe una receta de cocina `;
+    prompt += ingredientsPrompt(prompt, [...ingredients]);
+    prompt += '\n\nLa receta debe ser clara y concisa. Debe de mostrar los ingredientes ocupados y el procedimiento extendido de preparación.';
+    return prompt;
 }
 
 

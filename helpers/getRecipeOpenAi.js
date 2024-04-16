@@ -19,7 +19,7 @@ const apiRequest = async (model, systemContent, userContent) => {
                     content: userContent
                 }
             ],
-            max_tokens: 600,
+            max_tokens: 1500,
         });
 
         console.log(completion.usage);
@@ -37,8 +37,8 @@ const getRecipeOpenAI = async (ingredients = [], cutomizations = {}) => {
 
     try {
         const userContent = generatePrompt(ingredients, cutomizations);
-        const model = "gpt-3.5-turbo";
-        const systemContent = "You are a nutritionist expert in creating recipes for cooking.";
+        const model = "gpt-4-turbo";        
+        const systemContent = 'Eres un nutricionista experto en crear recetas de cocina.';
         const recipe = await apiRequest(model, systemContent, userContent);
         if (!recipe) {
             return { ok: false };
@@ -46,7 +46,7 @@ const getRecipeOpenAI = async (ingredients = [], cutomizations = {}) => {
 
         return {
             ok: true,
-            msg: 'Recipes retrieved successfully',
+            msg: 'Recetas obtenidas exitosamente',
             prompt: userContent,
             result: recipe
         }
@@ -66,8 +66,8 @@ const getIngredientsOpenAI = async (imageUrl) => {
         //const base64Image = await encodeImage(imageUrl);
         const userContent = [
             {
-                'type': 'text',
-                'text': 'Identify all the foods in the image. Generate a 5-word description and an array of the found foods. Strictly respond with an object having the structure: {"imgDescription": description, "foodFound": []}. Do not provide anything else but the object in plain text format.'
+                'type': 'text',                
+                'text': 'Identifica toda la comida en la imagen. Genera una descripción de 5 palabras y un arreglo con los ingredientes encontrados. Responde estrictamente con un objeto con la siguiente estructura: {"imgDescription": description, "foodFound": []}. No respondas nada más. El objeto debe de tener un formato en texto plano.'
             },
             {
                 'type': 'image_url',
@@ -76,8 +76,8 @@ const getIngredientsOpenAI = async (imageUrl) => {
                 },
             }
         ];
-        const model = 'gpt-4-vision-preview';
-        const systemContent = 'You are a valuable assistant specialized in analyzing food images.';
+        const model = 'gpt-4-vision-preview';        
+        const systemContent = 'Eres un experto asistente especializado en analizar imagenes de alimentos.';
         let ingredients = await apiRequest(model, systemContent, userContent);
         if (!ingredients) {
             return { ok: false };
