@@ -5,12 +5,18 @@ const app = Vue.createApp({
             imageUrl: null,
             isBtnEnabled: false,
             page: 'initial',
-            /* 
-            // test data
-            imageUrl: "https://res.cloudinary.com/drplgwglb/image/upload/v1704979133/jvesfy10xjrzvjelgbep.jpg",
+
+            /* // test data
+            imageUrl: "https://res.cloudinary.com/drplgwglb/image/upload/v1713248403/o7cmjhn1tki2v89puzjz.jpg",
             isBtnEnabled: true,
-            page: 2, 
-            */
+            page: 3,
+            analysisResults: {
+                description: "Red apple with white background",
+                ingredients: [
+                    "apple"
+                ],
+            }, */
+
             prompt: null,
             recipe: null,
             enviroment: null,
@@ -38,7 +44,7 @@ const app = Vue.createApp({
     methods: {
         getEnviorment() {
             this.enviroment = (window.location.hostname.includes('localhost'))
-                ? 'http://localhost:3000'                
+                ? 'http://localhost:3000'
                 : `${window.location.protocol}//${window.location.hostname}:${window.location.port}`
         },
         verifyImage() {
@@ -288,10 +294,10 @@ const app = Vue.createApp({
         getRecipePreferences() {
             return {
                 preferences: {
-                    mealTime: 'no-preference',
-                    cuisine: 'no-preference',
-                    diet: [],
-                    mealType: 'no-preference',
+                    HoraDeComida: 'sin-preferencia',
+                    Cocina: 'sin-preferencia',
+                    Dieta: [],
+                    TipoDeComida: 'sin-preferencia',
                 },
                 preparationTime: {},
                 nutrition: {},
@@ -302,17 +308,17 @@ const app = Vue.createApp({
         getMealOptions() {
             return {
                 preferences: {
-                    mealTime: [
-                        'no-preference', 'breakfast', 'lunch', 'dinner', 'snack', 'teatime'
+                    HoraDeComida: [
+                        'sin-preferencia', 'desayuno', 'almuerzo', 'cena', 'bocadillo', 'hora del té'
                     ],
-                    cuisine: [
-                        'no-preference', 'african', 'american', 'british', 'cajun', 'chinese', 'french', 'german', 'greek', 'indian', 'irish', 'italian', 'jewish', 'japanese', 'korean', 'mexican', 'middle eastern', 'nordic', 'southern', 'spanish', 'thai', 'vietnamese'
+                    Cocina: [
+                        'sin-preferencia', 'africana', 'americana', 'británica', 'cajun', 'china', 'francesa', 'alemana', 'griega', 'india', 'irlandesa', 'italiana', 'judía', 'japonesa', 'coreana', 'mexicana', 'del-medio-oriente', 'nórdica', 'sureña', 'española', 'tailandesa', 'vietnamita'
                     ],
-                    diet: [
-                        'no-preference', 'balanced', 'high-protein', 'high-fiber', 'low-fat', 'low-carb', 'low-sodium', 'low-sugar'
+                    Dieta: [
+                        'sin-preferencia', 'equilibrada', 'alta en proteínas', 'alta en fibra', 'baja en grasas', 'baja en carbohidratos', 'baja en sodio', 'baja en azúcar'
                     ],
-                    mealType: [
-                        'no-preference', 'main course', 'side dish', 'dessert', 'appetizer', 'salad', 'bread', 'breakfast', 'soup', 'beverage', 'sauce', 'marinade', 'fingerfood', 'snack', 'drink'
+                    TipoDeComida: [
+                        'sin preferencia', 'plato principal', 'acompañamiento', 'postre', 'aperitivo', 'ensalada', 'pan', 'desayuno', 'sopa', 'bebida', 'salsa', 'marinado', 'bocadito', 'bocadillo', 'trago'
                     ],
                 },
                 preparationTime: {
@@ -339,12 +345,12 @@ const app = Vue.createApp({
                 },
                 kitchenForniture: {
                     kitchenResources: [
-                        'no-preference', 'oven', 'blender', 'microwave', 'toaster', 'grill', 'griddle',
-                        'fryer', 'pressure cooker', 'slow cooker', 'food processor', 'juicer', 'spiralizer', 'coffee maker',
-                        'waffle maker', 'ice cream maker', 'stand mixer', 'hand mixer', 'food dehydrator', 'food scale',
-                        'measuring cups', 'measuring spoons', 'thermometer', 'colander', 'strainer', 'spatula', 'whisk',
-                        'peeler', 'can opener', 'bottle opener', 'corkscrew', 'ladle', 'tongs', 'masher', 'grater', 'zester',
-                        'sieve', 'chopper', 'slicer', 'knife', 'cutting board'
+                        'sin-preferencia', 'horno', 'licuadora', 'microondas', 'tostadora', 'parrilla', 'plancha',
+                        'freidora', 'olla a presión', 'olla de cocción lenta', 'procesador de alimentos', 'exprimidor', 'espiralizador', 'cafetera',
+                        'máquina para hacer waffles', 'máquina para hacer helados', 'batidora de pedestal', 'batidora de mano', 'deshidratador de alimentos', 'balanza de cocina',
+                        'tazas medidoras', 'cucharas medidoras', 'termómetro', 'colador', 'estameña', 'espátula', 'batidor',
+                        'pelador', 'abrelatas', 'abrebotellas', 'sacacorchos', 'cucharón', 'tenazas', 'machacador', 'rallador', 'rallador de cítricos',
+                        'tamiz', 'picador', 'rebanador', 'cuchillo', 'tabla de cortar'
                     ]
 
                 },
@@ -366,18 +372,18 @@ const app = Vue.createApp({
             this.showCustomizations = !this.showCustomizations
         },
         validateRecipePreferencesDiet() {
-            const diet = this.recipePreferences.preferences.diet
+            const diet = this.recipePreferences.preferences.Dieta
             if (diet.length > 0) {
-                if (diet.includes('no-preference')) {
-                    this.recipePreferences.preferences.diet = ['no-preference']
+                if (diet.includes('sin-preferencia')) {
+                    this.recipePreferences.preferences.Dieta = ['sin-preferencia']
                 }
             }
         },
         validateRecipePreferencesKitchenResources() {
             const kitchenResources = this.recipePreferences.kitchenForniture.kitchenResources
             if (kitchenResources.length > 0) {
-                if (kitchenResources.includes('no-preference')) {
-                    this.recipePreferences.kitchenForniture.kitchenResources = ['no-preference']
+                if (kitchenResources.includes('sin-preferencia')) {
+                    this.recipePreferences.kitchenForniture.kitchenResources = ['sin-preferencia']
                 }
             }
         },
@@ -403,13 +409,13 @@ const app = Vue.createApp({
                                 continue
                             }
                             value2.forEach((val) => {
-                                if (val === 'no-preference') {
+                                if (val === 'sin-preferencia') {
                                     delete obj[key][key2]
                                 }
                             });
                             continue
                         }
-                        if (value2 === 'no-preference' || !value2 || value2.length < 1) {
+                        if (value2 === 'sin-preferencia' || !value2 || value2.length < 1) {
                             delete obj[key][key2]
                         }
                     }
