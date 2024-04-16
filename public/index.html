@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <title>Ai Chefcito</title>
@@ -151,17 +151,17 @@
 
           <div class="card shadow p-3 mb-5 rounded">
             <div class="card-header">
-              <h3>Image Selection</h3>
+              <h3>Selección de imagen</h3>              
             </div>
             <div class="card-body">
 
               <div class="mb-3">
-                <label for="" class="form-label">Select an image to analyze</label>
+                <label for="" class="form-label">Selecciona una imagen de tu galeria para analizar</label>
                 <input @change="verifyImage" ref="image" type="file" accept="image/*" class="form-control" />
-                <small id="helpId" class="text-muted">This image will be used for the rest of the process</small>
+                <small id="helpId" class="text-muted">Esta imagen va a ser usada para el resto del proceso</small>
               </div>
               <button :disabled="!isBtnEnabled" @click.prevent="submitImage"
-                class="btn btn-primary float-end">Upload</button>
+                class="btn btn-primary float-end">Cargar</button>
 
             </div>
           </div>
@@ -486,9 +486,9 @@
         <div v-if="page=='loader'" class="col-12 mb-5 animate__animated animate__bounceIn">
           <div class="card shadow p-3 mb-5">
             <div class="card-body text-center">
-              <h3>Processing your data </h3>
+              <h3>Procesando tu información </h3>
               <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
+                <span class="visually-hidden">Cargando...</span>
               </div>
             </div>
           </div>
