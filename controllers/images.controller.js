@@ -14,7 +14,7 @@ const uploadImage = async (req = request, res = response) => {
     if (!fileUpload) {
         return res.status(400).json({
             ok: false,
-            msg: 'No image file found'
+            msg: 'No se ha seleccionado ningún archivo para subir'
         });
     }
 
@@ -24,14 +24,14 @@ const uploadImage = async (req = request, res = response) => {
 
         return res.status(201).json({
             ok: true,
-            msg: 'Image uploaded successfully',
+            msg: 'Imagen subida exitosamente',
             url: secure_url
         });
 
     } catch (error) {
         return res.status(400).json({
             ok: false,
-            msg: 'There was an error while upload the image'
+            msg: 'Ocurrió un error al subir la imagen'
         });
     }
 
@@ -45,7 +45,7 @@ const analizaImage = async (req = request, res = response) => {
     if (!response.ok) {
         return res.status(400).json({
             ok: false,
-            msg: 'There was an error while image analysis'
+            msg: 'Ocurrió un error al analizar la imagen'
         });
     }
 
@@ -73,15 +73,15 @@ const analizaImage = async (req = request, res = response) => {
     if (!foodFound.length) {
         return res.status(200).json({
             ok: false,
-            msg: 'The image does not contain food - objects'
+            msg: 'La imagen no contiene comida'
         });
     }
 
-    const imgDescription = description.captions[0].text ?? 'No description found';
+    const imgDescription = description.captions[0].text ?? 'No se ha encontrado una descripción de la imagen';
 
     res.status(200).json({
         ok: true,
-        msg: 'Image analyzed successfully',
+        msg: 'La imagen ha sido analizada exitosamente',
         imgDescription,
         foodFound
     });
@@ -96,7 +96,7 @@ const analyzeImageOpenAI = async (req = request, res = response) => {
     if (!image) {
         return res.status(400).json({
             ok: false,
-            msg: 'No image url found'
+            msg: 'No se ha encontrado una url de imagen'
         });
     }
 
@@ -105,7 +105,7 @@ const analyzeImageOpenAI = async (req = request, res = response) => {
     if (!response.ok) {
         return res.status(400).json({
             ok: false,
-            msg: 'There was an error while image analysis'
+            msg: 'Ocurrió un error al analizar la imagen'
         });
     }
 
@@ -122,7 +122,7 @@ const analyzeImageOpenAI = async (req = request, res = response) => {
 
     res.status(200).json({
         ok: true,
-        msg: 'Image analyzed successfully',
+        msg: 'Imagen analizada exitosamente',
         imgDescription,
         foodFound,
     });
