@@ -269,7 +269,7 @@
               <div class="mb-3">
                 <label for="" class="form-label">Select an image to analyze</label>
                 <input @change="verifyImage" ref="image" type="file" accept="image/*" class="form-control" />
-                <small id="helpId" class="text-muted">This image will be used for the rest of the process</small>
+                <small id="helpId" class="text-muted">This image will be used to extract the ingredientes for the recipe.</small>
               </div>
               <button :disabled="!isBtnEnabled" @click.prevent="submitImage"
                 class="btn btn-primary float-end">Upload</button>
@@ -291,7 +291,7 @@
                 Select another image  
               </button>              
               <button :disabled="!isBtnEnabled" @click="analyzeImageOpenIA" class="btn btn-primary m-3">
-                Analyze Image
+                Find ingredients
               </button>
             </div>
           </div>
@@ -303,7 +303,7 @@
             <div class="card-body text-center">
               <figure class="figure">
                 <img v-if="imageUrl" :src="imageUrl" id="analyzed-img" class="figure-img img-fluid rounded" />
-                <figcaption class="figure-caption">Image selected</figcaption>
+                <figcaption class="figure-caption">Image uploaded</figcaption>
               </figure>
               <br class="mb-5">
               <div v-if="Object.keys(analysisResults).length < 1" class="row justify-content-center">
@@ -326,10 +326,10 @@
                   <hr>
                   <code class="mb-5">
                     <h4 class="mb-3">We got this information from the photo... </h4>
-                    <h6><u>Description</u>: {{analysisResults.description}}</h6>
-                    <h6><u>Ingredients</u>:
-                      <ul v-if="analysisResults.ingredients && analysisResults.ingredients.length" class="text-start ps-4">
-                        <li v-for="(ingredient, idx) in analysisResults.ingredients" :key="idx" class="text-start">
+                    <h6 class="text-start"><u>Description</u>: <br>{{analysisResults.description}}</h6>
+                    <h6 class="text-start"><u>Ingredients</u>:
+                      <ul v-if="analysisResults.ingredients && analysisResults.ingredients.length" class="ps-4">
+                        <li v-for="(ingredient, idx) in analysisResults.ingredients" :key="idx">
                           {{ ingredient }}
                         </li>
                       </ul>
@@ -341,9 +341,8 @@
                     Select another image
                   </button>
                 </div>
-                <div class="row mt-4">
+                <div class="row">
                   <div class="col-12">
-
                     <h2>Recipe Preferences</h2>
                     <hr>
                     <div id="preferences" class="text-start">
