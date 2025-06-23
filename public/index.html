@@ -28,38 +28,151 @@
 <body>
 
   <style>
+    :root {
+      --bg-primary: #effbf2;
+      --text-primary: #2E2E2E;
+      --text-secondary: #6C757D;
+      --border-color: #E0E0E0;
+      --btn-primary-bg: #62c884;
+      --btn-primary-hover: #42ce76;
+      --btn-secondary-bg: #C6E7F0;
+      --success-bg: #98D8AA;
+      --danger-bg: #ff5141;
+    }
+  
+    /* Global */
     body {
       font-family: 'Poppins', sans-serif;
-      background-image: url('../images/bg_image.png');
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      background-size: cover;
-
+      background-color: var(--bg-primary);
+      background-image: none !important;
+      color: var(--text-primary);
+      margin: 0;
+      padding: 0;
     }
-
-    #recipes-img {
-      max-width: 250px;
+  
+    a {
+      color: var(--btn-primary-bg);
     }
-
-    #uploaded-img {
-      max-width: 550px;
+  
+    a:hover {
+      color: var(--btn-primary-hover);
     }
-
+  
+    /* Navbar */
+    .navbar {
+      background-color: rgba(255, 255, 255, 0.92) !important;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+  
+    .navbar-brand {
+      font-weight: 600;
+      color: var(--text-primary) !important;
+    }
+  
+    /* Cards */
+    .card {
+      background-color: #ffffff;
+      border: 1px solid var(--border-color) !important;
+      border-radius: .75rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+  
+    .card-header,
+    .card-footer {
+      background-color: #fff;
+      border-bottom: 1px solid var(--border-color);
+    }
+  
+    /* Buttons */
+    .btn-primary {
+      background-color: var(--btn-primary-bg);
+      border-color: var(--btn-primary-bg);
+    }
+  
+    .btn-primary:hover,
+    .btn-primary:focus {
+      background-color: var(--btn-primary-hover);
+      border-color: var(--btn-primary-hover);
+    }
+  
+    .btn-outline-primary {
+      color: var(--btn-primary-bg);
+      border-color: var(--btn-primary-bg);
+    }
+  
+    .btn-outline-primary:hover,
+    .btn-outline-primary:focus {
+      background-color: var(--btn-primary-bg);
+      color: #fff;
+      border-color: var(--btn-primary-bg);
+    }
+  
+    .btn-secondary {
+      background-color: var(--btn-secondary-bg);
+      border-color: var(--btn-secondary-bg);
+      color: var(--text-primary);
+    }
+  
+    .btn-secondary:hover {
+      background-color: #b8dfe5;
+      border-color: #b8dfe5;
+    }
+  
+    /* Badges & Toasts */
+    .badge.bg-success {
+      background-color: var(--success-bg) !important;
+      color: #fff;
+    }
+  
+    .badge.bg-danger {
+      background-color: var(--danger-bg) !important;
+      color: #fff;
+    }
+  
+    .toast.text-bg-danger {
+      background-color: var(--danger-bg) !important;
+    }
+  
+    /* Form controls */
+    .form-control:focus,
+    .form-select:focus {
+      border-color: var(--btn-primary-bg);
+      box-shadow: 0 0 0 .2rem rgba(103, 197, 135, .25);
+    }
+  
+    /* Headings & Text */
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      color: var(--text-primary);
+    }
+  
+    .text-muted {
+      color: var(--text-secondary) !important;
+    }
+  
+    /* Borders & Separators */
+    hr {
+      border-color: var(--border-color);
+    }
+  
+    /* Images */
+    #recipes-img,
+    #uploaded-img,
     #analyzed-img {
-      max-width: 550px;
+      max-width: 100%;
+      border: 1px solid var(--border-color);
+      border-radius: .5rem;
     }
-
-
-    /* media query for mobiles and tablets */
+  
+    /* Responsive media query */
     @media only screen and (max-width: 768px) {
-      #recipes-img {
-        max-width: 100%;
-      }
-
-      #uploaded-img {
-        max-width: 100%;
-      }
-
+  
+      #recipes-img,
+      #uploaded-img,
       #analyzed-img {
         max-width: 100%;
       }
@@ -214,7 +327,14 @@
                   <code class="mb-5">
                     <h4 class="mb-3">We got this information from the photo... </h4>
                     <h6><u>Description</u>: {{analysisResults.description}}</h6>
-                    <h6><u>Ingredients</u>: {{analysisResults.ingredients}}</h6>
+                    <h6><u>Ingredients</u>:
+                      <ul v-if="analysisResults.ingredients && analysisResults.ingredients.length" class="text-start ps-4">
+                        <li v-for="(ingredient, idx) in analysisResults.ingredients" :key="idx" class="text-start">
+                          {{ ingredient }}
+                        </li>
+                      </ul>
+                      <span v-else class="text-muted">No ingredients found.</span>
+                    </h6>
                   </code>
                   <br>
                   <button :disabled="!isBtnEnabled" @click="selectImage" class="btn btn-sm btn-outline-danger">
