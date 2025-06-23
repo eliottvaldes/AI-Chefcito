@@ -23,7 +23,7 @@ const numberPromt = (prompt, preferences) => {
 // f' to generate prompts for fields that contains ingredients
 const ingredientsPrompt = (prompt, ingredients) => {
     if (ingredients.length === 0) return prompt;
-    prompt += `\nUse only some of the following ingredients: `;
+    prompt += `\nYou must use only the ingredients provided below. You can use some or all of them according to the recipe, but it is strictly forbidden to add any ingredients not listed.`;
     prompt += `\n- ${ingredients.join(', ')}`;
     return prompt;
 
@@ -42,7 +42,7 @@ const createCustomizedPrompt = (ingredients, userPreferences ) => {
     if (Object.keys(userPreferences).length === 0) return prompt;
     const { preferences, preparationTime, nutrition, kitchenForniture } = userPreferences;
 
-    let prompt = `Write a recipe that fits the following preferences: `;
+    let prompt = `Write a recipe that strictly fits the following preferences without adding any extra information. Respond with the recipe's name, ingredients, and instructions to prepare it.`;
     prompt = arrayPromt(prompt, { ...preferences });
     prompt = numberPromt(prompt, { ...preparationTime });
     prompt = numberPromt(prompt, { ...nutrition });
@@ -54,7 +54,7 @@ const createCustomizedPrompt = (ingredients, userPreferences ) => {
 }
 
 const createBasicPrompt = (ingredients) => {
-    let prompt = `Write a recipe `;
+    let prompt = `Write a recipe strictly using only the ingredients provided without adding any extra ingredients or information. Respond with the recipe's name, ingredients, and instructions to prepare it.`;
     return ingredientsPrompt(prompt, [...ingredients]);
 }
 

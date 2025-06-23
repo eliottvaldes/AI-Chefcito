@@ -121,17 +121,7 @@
                   </button>
                 </div>
               </div>
-            </div>
-            <div class="col-12 col-lg-6">
-              <div class="card shadow-lg p-5 mb-5 bg-white rounded">
-                <div class="card-body text-center">
-                  <h3 class="mb-4" style="color: #95a5a6;">
-                    Snap a photo of your ticket or receipt
-                  </h3>
-                  <small style="color: #e74c3c;">(coming soon)</small>
-                </div>
-              </div>
-            </div>
+            </div>            
 
           </div>
 
@@ -170,12 +160,10 @@
               </figure>
               <br>
               <button :disabled="!isBtnEnabled" @click="selectImage" class="btn btn-outline-danger m-3">
-                Cancel</button>
-              <button :disabled="!isBtnEnabled" @click="analyzeImage" class="btn btn-primary m-3">
-                Analyze Image (Azure Cognitive Services)
-              </button>
+                Select another image  
+              </button>              
               <button :disabled="!isBtnEnabled" @click="analyzeImageOpenIA" class="btn btn-primary m-3">
-                Analyze Image (OpenAI Image Detection)
+                Analyze Image
               </button>
             </div>
           </div>
@@ -260,10 +248,7 @@
 
 
                           <div v-if="!showCustomizations" class="col-12">
-                            <div class="d-grid gap-2">
-                              <button class="btn btn-sm btn-primary" type="button" disabled>
-                                Use my preferences (coming soon)
-                              </button>
+                            <div class="d-grid gap-2">                             
                               <button @click="toggleShowCustomizations()" class="btn btn-primary" type="button">
                                 Show customizations
                               </button>
@@ -369,10 +354,7 @@
                                 <button @click="removeRecipePreferences()" class="btn btn-sm btn-outline-danger"
                                   type="button">
                                   Remove preferences
-                                </button>
-                                <button class="btn btn-sm btn-outline-primary mb-3" type="button" disabled>
-                                  Save preferences (coming soon)
-                                </button>
+                                </button>                                
                                 <button @click="toggleShowCustomizations()" class="btn btn-primary" type="button">
                                   Complete customization
                                 </button>
@@ -384,13 +366,6 @@
                         </div>
 
 
-                      </div>
-                      <hr class="mb-3">
-                      <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="" disabled>
-                        <label class="form-check-label" for="">
-                          Use medical preferences <small>(coming soon)</small>
-                        </label>
                       </div>
                     </div>
                   </div>
@@ -416,28 +391,13 @@
 
             <div class="col-12 col-lg-7">
               <div class="card shadow-sm p-3 mb-5">
-                <div class="card-body">
-                  <h3>Prompt</h3>
-                  <div>
-                    <p v-for="(line, index) in resultPrompt" :key="index" class="text-break">{{ line }} <br></p>
-                  </div>
-                  <hr class="my-5">
+                <div class="card-body">                  
                   <h3>Recipe</h3>
+                  <hr class="mb-3">
                   <div>
                     <p v-for="(line, index) in resultRecipe " :key="index" class="text-break">{{ line }}</p>
                   </div>
-                  <br>
-                  <div class="btn-group float-end" role="group" aria-label="Basic mixed styles example">
-                    <button disabled type="button" class="btn btn-sm btn-outline-dark">
-                      <i class="fa-solid fa-bookmark"></i>
-                    </button>
-                    <button disabled type="button" class="btn btn-sm btn-outline-dark">
-                      <i class="fa-solid fa-share"></i>
-                    </button>
-                    <button type="button" class="btn btn-sm btn-success" onclick="nextFeauturesAlert()">
-                      <i class="fa-solid fa-circle-play"></i>
-                    </button>
-                  </div>
+                  <br>                
 
                 </div>
                 <div class="card-footer">
@@ -497,19 +457,6 @@
 
   <!-- app.js -->
   <script type="text/javascript" src="./app.js"></script>
-
-  <script>
-    const nextFeauturesAlert = () => {
-      Swal.fire({
-        title: 'Ups! Feature not available yet',
-        text: 'Soon you will be able to choose to read or listen step by step to the instructions to prepare your recipe!',
-        imageUrl: 'https://picsum.photos/400/200',
-        imageWidth: 400,
-        imageHeight: 200,
-        imageAlt: 'Random image',
-      })
-    }
-  </script>
 
 
 

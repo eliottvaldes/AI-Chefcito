@@ -19,7 +19,7 @@ const apiRequest = async (model, systemContent, userContent) => {
                     content: userContent
                 }
             ],
-            max_tokens: 600,
+            max_tokens: 1500,
         });
 
         console.log(completion.usage);
@@ -37,7 +37,7 @@ const getRecipeOpenAI = async (ingredients = [], cutomizations = {}) => {
 
     try {
         const userContent = generatePrompt(ingredients, cutomizations);
-        const model = "gpt-3.5-turbo";
+        const model = "gpt-4.1-mini";
         const systemContent = "You are a nutritionist expert in creating recipes for cooking.";
         const recipe = await apiRequest(model, systemContent, userContent);
         if (!recipe) {
@@ -67,7 +67,7 @@ const getIngredientsOpenAI = async (imageUrl) => {
         const userContent = [
             {
                 'type': 'text',
-                'text': 'Identify all the foods in the image. Generate a 5-word description and an array of the found foods. Strictly respond with an object having the structure: {"imgDescription": description, "foodFound": []}. Do not provide anything else but the object in plain text format.'
+                'text': 'Identify all the foods in the image. Generate a 5-word description and an array of the found foods. For each food, explicitly mention the quantity found using a numeric value. If the exact quantity is unknown, provide an estimated numeric amount. All quantities must be in numeric format. Strictly respond with an object having the structure: {"imgDescription": description, "foodFound": []}. Do not provide anything else but the object in plain text format. Example: {"imgDescription": "Grocery cart in the store", "foodFound": [ "1 Red Bell Pepper", "1 Broccoli", "2 Wine Bottles", "4 Bananas", ... ]}',
             },
             {
                 'type': 'image_url',
@@ -76,7 +76,7 @@ const getIngredientsOpenAI = async (imageUrl) => {
                 },
             }
         ];
-        const model = 'gpt-4-vision-preview';
+        const model = 'gpt-4o';
         const systemContent = 'You are a valuable assistant specialized in analyzing food images.';
         let ingredients = await apiRequest(model, systemContent, userContent);
         if (!ingredients) {
