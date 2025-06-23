@@ -19,10 +19,12 @@ const app = Vue.createApp({
             showMoreCustomizations: false,
             recipePreferences: {},
             mealOptions: {},
+            recipesAvailable: 5,
         }
     },
     mounted() {
         this.getEnviorment()
+        this.validateUserQuota()
         this.mealOptions = this.getMealOptions()
         this.recipePreferences = this.getRecipePreferences()
     },
@@ -49,6 +51,10 @@ const app = Vue.createApp({
             }
         },
         async submitImage() {
+            if (!this.validateUserQuota()) {
+                return;
+            }
+
             const currentPage = this.page
             try {
                 this.loadingData()
@@ -116,6 +122,10 @@ const app = Vue.createApp({
             this.isBtnEnabled = true
         },
         async analyzeImageOpenIA() {
+            if (!this.validateUserQuota()) {
+                return;
+            }
+
             const currentPage = this.page
             try {
                 this.loadingData()
@@ -178,6 +188,9 @@ const app = Vue.createApp({
             return ingredientsFound;
         },
         async getRecipes() {
+            if (!this.validateUserQuota()) {
+                return;
+            }
             const currentPage = this.page
             try {
                 this.loadingData()
@@ -205,12 +218,34 @@ const app = Vue.createApp({
                 this.prompt = prompt
                 this.recipe = result
                 this.page = 4
+                let count = parseInt(localStorage.getItem('recipesCount')) || 0;
+                localStorage.setItem('recipesCount', count + 1);
             } catch (error) {
                 this.catchErrors(error);
                 this.page = currentPage
             }
             this.isBtnEnabled = true
 
+        },
+        validateUserQuota() {
+            const MAX_RECIPES = 5;
+            let count = parseInt(localStorage.getItem('recipesCount')) || 0;
+            this.recipesAvailable = MAX_RECIPES - count;
+            this.isBtnEnabled = count < MAX_RECIPES;
+            if (count >= MAX_RECIPES) {
+                this.createAlerts('error', [`You have reached the limit of ${MAX_RECIPES} recipes.`]);
+            }
+            return count < MAX_RECIPES;
+        },
+        changePage(numPage){
+            // first validate the user quota
+            if (!this.validateUserQuota()) {
+                this.isBtnEnabled = false
+                return;
+            }
+
+            this.page = numPage
+            this.isBtnEnabled = true
         },
         loadingData() {
             this.isBtnEnabled = false

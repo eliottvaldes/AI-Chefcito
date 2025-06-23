@@ -82,6 +82,21 @@
 
       <div class="row justify-content-center mb-5">
 
+        <div v-if="page=='initial' || page==1 || page==2 || page==3 || page==4" class="col-12 mb-3">
+            <div class="card p-3" :style="recipesAvailable > 0 ? 'display: none;' : ''">
+              <span v-if="recipesAvailable > 0" class="text-break badge bg-success">
+                You can still create {{ recipesAvailable }} more {{ recipesAvailable === 1 ? 'recipe' : 'recipes' }}!
+              </span>
+              <span v-if="recipesAvailable <= 0" class="text-break badge bg-danger">
+                You've reached your recipe limit (5). <br>
+                Please contact the developer to increase your limit. <br><br>
+                <a href="mailto:eliotvaldes.dev@gmail.com" class="text-decoration-none mt-3" style="color: #b4ff04;">
+                  <i class="fas fa-envelope"></i> Contact Developer
+                </a>
+              </span>
+            </div>
+        </div>
+
         <div v-if="page=='initial'" class="animate__animated animate__zoomIn animate__delay-2s">
           <div class="row justify-content-center">
 
@@ -116,7 +131,7 @@
                   <h3 class="mb-3" style="color: #3498db;">
                     <strong>Snap a photo of your fridge, pantry, or ingredients</strong>
                   </h3>
-                  <button @click="page=1" class="btn btn-primary">
+                  <button @click="changePage(1)" class="btn btn-primary" :disabled="!isBtnEnabled">
                     <i class="bi bi-camera"></i> Scan Now!
                   </button>
                 </div>
@@ -387,7 +402,7 @@
 
         <div v-if="page==4" class="col-12 mb-5 animate__animated animate__backInLeft">
 
-          <div class="row row-cols-1 row-cols-lg-2 justify-content-between">
+          <div class="row row-cols-1 row-cols-lg-2 justify-content-between">            
 
             <div class="col-12 col-lg-7">
               <div class="card shadow-sm p-3 mb-5">
@@ -457,8 +472,6 @@
 
   <!-- app.js -->
   <script type="text/javascript" src="./app.js"></script>
-
-
 
   <!-- Bootstrap JavaScript Libraries -->
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
