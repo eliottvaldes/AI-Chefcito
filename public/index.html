@@ -83,7 +83,7 @@
       <div class="row justify-content-center mb-5">
 
         <div v-if="page=='initial' || page==1 || page==2 || page==3 || page==4" class="col-12 mb-3">
-            <div class="card p-3" :style="recipesAvailable > 0 ? 'display: none;' : ''">
+            <div class="card p-3" :style="recipesAvailable > 0 && page!=4 ? 'display: none;' : ''">
               <span v-if="recipesAvailable > 0" class="text-break badge bg-success">
                 You can still create {{ recipesAvailable }} more {{ recipesAvailable === 1 ? 'recipe' : 'recipes' }}!
               </span>
@@ -239,7 +239,7 @@
                       <div class="form-check">
                         <input class="form-check-input" type="radio" id="custom" value="custom" v-model="recipeType">
                         <label class="form-check-label" for="">
-                          Custom
+                          Customized
                         </label>
                       </div>
                       <div v-if="recipeType=='custom'" class="">
