@@ -76,7 +76,7 @@ const getIngredientsOpenAI = async (imageUrl) => {
         const userContent = [
             {
                 'type': 'text',
-                'text': 'Identify all the food/ingredientes in the image. Do not include any non-food items. Generate a 5-word description and an array of the found food/ingredients. For each food/ingredient, explicitly mention the quantity found using a numeric value. If the exact quantity is unknown, provide an estimated numeric amount. All quantities must be in numeric format. Strictly respond with an object having the structure: {"imgDescription": description, "foodFound": []}. Do not provide anything else but the object in plain text format. Example: {"imgDescription": "Grocery cart in the store", "foodFound": [ "1 Red Bell Pepper", "1 Broccoli", "2 Wine Bottles", "4 Bananas", ... ]}',
+                'text': 'Identify all the food/ingredientes in the image. Do not include any non-food items. Generate a 5-word description and an array of the found food/ingredients. For each food/ingredient, explicitly mention the quantity found using a numeric value. If the exact quantity is unknown, provide an estimated numeric amount. All quantities must be in numeric format. Strictly respond with a text-plain object having the structure: {"imgDescription": description, "foodFound": []}. Do not provide anything else. Never parse this object into a json object, just return it as plain text. Example: {"imgDescription": "Grocery cart in the store", "foodFound": [ "1 Red Bell Pepper", "1 Broccoli", "2 Wine Bottles", "4 Bananas", ... ]}',
             },
             {
                 'type': 'image_url',
@@ -90,7 +90,8 @@ const getIngredientsOpenAI = async (imageUrl) => {
         Do not include any objects, utensils, or non-edible items. Your task is to return a concise five-word description of the image and an array of the identified foods or ingredients, each with a numeric quantity. If the exact quantity is unknown, provide an estimated numeric amount.
         All quantities must be expressed in numeric format.
         You must return the result strictly as a plain text object using the following structure (and nothing else):
-        {"imgDescription": "Grocery cart in the store", "foodFound": [ "1 Red Bell Pepper", "1 Broccoli", "2 Wine Bottles", "4 Bananas", "1 Lettuce", "1 Zucchini" ]}
+        {"imgDescription": "Grocery cart in the store", "foodFound": [ "1 Red Bell Pepper", "1 Broccoli", "2 Wine Bottles", "4 Bananas", "1 Lettuce", "1 Zucchini" ]}.
+        Never parse this object into a json object, just return it as plain text.
         `;
         let ingredients = await apiRequest(model, systemContent, userContent);
         if (!ingredients) {
