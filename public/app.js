@@ -220,6 +220,8 @@ const app = Vue.createApp({
                 this.page = 4
                 let count = parseInt(localStorage.getItem('recipesCount')) || 0;
                 localStorage.setItem('recipesCount', count + 1);
+                let wasLastRecipe = (count + 1 ) == 5 ? 1 : 0;
+                this.validateUserQuota(wasLastRecipe);
             } catch (error) {
                 this.catchErrors(error);
                 this.page = currentPage
@@ -227,13 +229,17 @@ const app = Vue.createApp({
             this.isBtnEnabled = true
 
         },
-        validateUserQuota() {
+        validateUserQuota(wasLastRecipe = 0) {
             const MAX_RECIPES = 5;
             let count = parseInt(localStorage.getItem('recipesCount')) || 0;
             this.recipesAvailable = MAX_RECIPES - count;
             this.isBtnEnabled = count < MAX_RECIPES;
             if (count >= MAX_RECIPES) {
-                this.createAlerts('error', [`You have reached the limit of ${MAX_RECIPES} recipes.`]);
+                if (wasLastRecipe == 1) {
+                    this.createAlerts('warning', [`You has just reached the limit of ${MAX_RECIPES} recipes. The last recipe has just been created.`]);
+                } else {
+                    this.createAlerts('error', [`You have reached the limit of ${MAX_RECIPES} recipes.`]);
+                }
             }
             return count < MAX_RECIPES;
         },
@@ -292,7 +298,8 @@ const app = Vue.createApp({
         },
         createAlerts(icon, data) {
 
-            const title = (icon != 'error') ? 'Success!' : 'Ups!';
+            const title = (['error', 'warning'].includes(icon)) ? 'Error' : 'Success';
+                
 
             let html = '';
             data.forEach((msg) => {
