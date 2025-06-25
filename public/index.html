@@ -268,7 +268,7 @@
 
               <div class="mb-3">
                 <label for="" class="form-label">Select an image to analyze</label>
-                <input @change="verifyImage" ref="image" type="file" accept="image/*" class="form-control" />
+                <input @change="verifyImage" ref="image" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg" class="form-control" />
                 <small id="helpId" class="text-muted">This image will be used to extract the ingredientes for the recipe.</small>
               </div>
               <button :disabled="!isBtnEnabled" @click.prevent="submitImage"
