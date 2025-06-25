@@ -1,11 +1,10 @@
+import { marked } from 'https://cdn.jsdelivr.net/npm/marked@5.1.1/lib/marked.esm.js';
+import DOMPurify from 'https://cdn.jsdelivr.net/npm/dompurify@2.4.0/dist/purify.es.js';
+
 const app = Vue.createApp({
     data() {
-        return {
-            analysisResults: {},
-            imageUrl: "",
-            isBtnEnabled: false,
-            page: 'initial',
-            /* 
+        return {                                        
+            /*
             // test data
             analysisResults: {
                 ingredients: ["1 Cereal Box","1 Tomato Sauce Bottle","1 Can Corn","1 Can Tuna","1 Sugar Bag","1 Pack Refried Beans"],
@@ -14,7 +13,12 @@ const app = Vue.createApp({
             imageUrl: "https://res.cloudinary.com/dayoaxmy4/image/upload/v1750834133/sgbypvyfrwiod77uro50.webp",
             isBtnEnabled: true,
             page: 3, 
+            // end test data
             */
+            analysisResults: {},
+            imageUrl: "",
+            isBtnEnabled: false,
+            page: 'initial',
             prompt: null,
             recipe: null,
             enviroment: null,
@@ -24,6 +28,7 @@ const app = Vue.createApp({
             recipePreferences: {},
             mealOptions: {},
             recipesAvailable: 5,
+            recipeHTML: '',
         }
     },
     mounted() {
@@ -216,8 +221,25 @@ const app = Vue.createApp({
                 }
 
                 let { data } = await axios.post(urlEndPoint, body)
-                const { msg, prompt, result } = data
+                const { ok, msg, prompt, result } = data
 
+                if (!ok) {
+                    this.recipe = null
+                    this.prompt = null
+                    this.page = 3
+                    this.createAlerts('error', [msg])
+                    this.recipeHTML = '';
+                    return;
+                }
+                
+                try {
+                    const rawHtml = marked(result);
+                    this.recipeHTML = DOMPurify.sanitize(rawHtml);
+                } catch (error) {
+                    console.error('Error sanitizing HTML:', error);
+                    this.recipeHTML = result; // Fallback to raw recipe text if sanitization fails
+                }
+                this.page = 4;
                 this.createAlerts('success', [msg])
                 this.prompt = prompt
                 this.recipe = result
@@ -302,8 +324,9 @@ const app = Vue.createApp({
         },
         createAlerts(icon, data) {
 
-            const title = (['error', 'warning'].includes(icon)) ? 'Error' : 'Success';
-                
+            // title is the icon name with the first letter capitalized
+            icon = icon.toLowerCase();
+            const title = icon.charAt(0).toUpperCase() + icon.slice(1);                
 
             let html = '';
             data.forEach((msg) => {
