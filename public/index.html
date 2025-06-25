@@ -472,6 +472,21 @@
                                   class="form-control" aria-label="diners">
                               </div>
 
+                              
+                              <div class="input-group mb-3" style="display: none;">
+                              <label for="" class="form-label">Kitchen Forniture</label>
+                                
+                              <div v-for="option in mealOptions.kitchenForniture" :key="option" class="form-check form-check-inline">
+                                <input type="checkbox" class="form-check-input" :id="`kf-${option}`" :value="option"
+                                  v-model="recipePreferences.kitchenForniture" @change="validateRecipePreferencesKitchenResources()" role="switch" />
+                                <label class="form-check-label" :for="`kf-${option}`">
+                                  {{ option }}
+                                </label>
+                              </div>
+
+
+                              </div>
+
                               <div class="form-check form-switch float-start">
                                 <input @click="showMoreCustomizations = !showMoreCustomizations"
                                   class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
