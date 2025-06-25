@@ -9,7 +9,7 @@ const getRecipes = async (req = request, res = response) => {
     if (!ingredients || ingredients.length === 0) {
         return res.status(400).json({
             ok: false,
-            msg: 'No ingredients provided'
+            msg: 'Any ingredient has provided'
         });
     }
 
@@ -35,7 +35,7 @@ const getCustomRecipes = async (req = request, res = response) => {
     if (!ingredients || ingredients.length === 0) {
         return res.status(400).json({
             ok: false,
-            msg: 'No ingredients provided'
+            msg: 'Any ingredient has provided'
         });
     }
 
