@@ -245,7 +245,7 @@
                     <strong>Snap a photo of your fridge, pantry, or ingredients</strong>
                   </h3>
                   <button @click="changePage(1)" class="btn btn-primary" :disabled="!isBtnEnabled">
-                    <i class="bi bi-camera"></i> Scan Now!
+                    <i class="fas fa-camera"></i> Scan Now!
                   </button>
                 </div>
               </div>
@@ -327,12 +327,40 @@
                   <code class="mb-5">
                     <h4 class="mb-3">We got this information from the photo... </h4>
                     <h6 class="text-start"><u>Description</u>: <br>{{analysisResults.description}}</h6>
-                    <h6 class="text-start"><u>Ingredients</u>:
+                    <h6 class="text-start"><u>Ingredients</u>:                      
                       <ul v-if="analysisResults.ingredients && analysisResults.ingredients.length" class="ps-4">
-                        <li v-for="(ingredient, idx) in analysisResults.ingredients" :key="idx">
-                          {{ ingredient }}
+                        <li v-for="(ingredient, idx) in analysisResults.ingredients" :key="idx" class="d-flex align-items-center">
+                          <template v-if="editingIndex === idx">
+                            <input v-model="editingValue" class="form-control form-control-sm me-2" @keyup.enter="saveEdit"
+                              @keyup.esc="cancelEdit" />
+                            <button class="btn btn-sm btn-success me-1" @click="saveEdit">
+                              <i class="fas fa-check"></i>
+                            </button>
+                            <button class="btn btn-sm btn-secondary" @click="cancelEdit">
+                              <i class="fas fa-x"></i>
+                            </button>
+                          </template>
+                          <template v-else>
+                            <span class="flex-grow-1">{{ ingredient }}</span>
+                            <button class="btn btn-sm btn-outline-primary me-1" @click="startEdit(idx)" title="Edit">
+                              <i class="fas fa-pencil"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" @click="deleteIngredient(idx)" title="Remove">
+                              <i class="fas fa-trash"></i>
+                            </button>
+                          </template>
                         </li>
                       </ul>
+                      <div class="mt-2" v-if="analysisResults.ingredients && analysisResults.ingredients.length">
+                        <div class="input-group input-group-sm mb-2" style="max-width: 400px;">
+                          <input v-model="newIngredient" @keyup.enter="addIngredient" type="text" class="form-control"
+                            placeholder="New ingredient..." />
+                          <button class="btn btn-sm btn-outline-success" @click="addIngredient">
+                            <i class="fas fa-plus-lg"></i> Add ingredient
+                          </button>
+                        </div>
+                      </div>
+
                       <span v-else class="text-muted">No ingredients found.</span>
                     </h6>
                   </code>
