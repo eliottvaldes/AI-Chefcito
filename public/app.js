@@ -1,18 +1,19 @@
 const app = Vue.createApp({
     data() {
         return {
+            analysisResults: {},
+            imageUrl: "",
+            isBtnEnabled: false,
+            page: 'initial',
+            /* 
+            // test data
             analysisResults: {
                 ingredients: ["1 Cereal Box","1 Tomato Sauce Bottle","1 Can Corn","1 Can Tuna","1 Sugar Bag","1 Pack Refried Beans"],
                 description: 'Assorted groceries on white background'
             },
             imageUrl: "https://res.cloudinary.com/dayoaxmy4/image/upload/v1750834133/sgbypvyfrwiod77uro50.webp",
             isBtnEnabled: true,
-            page: 3,
-            /* 
-            // test data
-            imageUrl: "https://res.cloudinary.com/drplgwglb/image/upload/v1704979133/jvesfy10xjrzvjelgbep.jpg",
-            isBtnEnabled: true,
-            page: 2, 
+            page: 3, 
             */
             prompt: null,
             recipe: null,
