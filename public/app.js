@@ -3,18 +3,18 @@ import DOMPurify from 'https://cdn.jsdelivr.net/npm/dompurify@2.4.0/dist/purify.
 
 const app = Vue.createApp({
     data() {
-        return {                                        
+        return {                                                   
             /*
             // test data
             analysisResults: {
                 ingredients: ["1 Cereal Box","1 Tomato Sauce Bottle","1 Can Corn","1 Can Tuna","1 Sugar Bag","1 Pack Refried Beans"],
                 description: 'Assorted groceries on white background'
             },
-            imageUrl: "https://res.cloudinary.com/dayoaxmy4/image/upload/v1750834133/sgbypvyfrwiod77uro50.webp",
+            imageUrl: "https://res.cloudinary.com/dayoaxmy4/image/upload/v1750839644/a8atwgsutbqneerw1wzd.webp",
             isBtnEnabled: true,
             page: 3, 
             // end test data
-            */
+            */            
             analysisResults: {},
             imageUrl: "",
             isBtnEnabled: false,
@@ -29,6 +29,9 @@ const app = Vue.createApp({
             mealOptions: {},
             recipesAvailable: 5,
             recipeHTML: '',
+            editingIndex: null,
+            editingValue: '',
+            newIngredient: ''
         }
     },
     mounted() {
@@ -493,7 +496,34 @@ const app = Vue.createApp({
 
             return obj;
         },
-
+        startEdit(idx) {
+            this.editingIndex = idx;
+            this.editingValue = this.analysisResults.ingredients[idx];
+        },
+        saveEdit() {
+            const val = this.editingValue.trim();
+            if (val) {
+                this.analysisResults.ingredients.splice(this.editingIndex, 1, val);
+            }
+            this.cancelEdit();
+        },
+        cancelEdit() {
+            this.editingIndex = null;
+            this.editingValue = '';
+        },
+        deleteIngredient(idx) {
+            this.analysisResults.ingredients.splice(idx, 1);
+            if (this.editingIndex === idx) {
+                this.cancelEdit();
+            }
+        },
+        addIngredient() {
+            const val = this.newIngredient.trim();
+            if (val) {
+                this.analysisResults.ingredients.push(val);
+                this.newIngredient = '';
+            }
+        },
     },
 
 }).mount('#app')
