@@ -1,10 +1,13 @@
 const app = Vue.createApp({
     data() {
         return {
-            analysisResults: {},
-            imageUrl: null,
-            isBtnEnabled: false,
-            page: 'initial',
+            analysisResults: {
+                ingredients: ["1 Cereal Box","1 Tomato Sauce Bottle","1 Can Corn","1 Can Tuna","1 Sugar Bag","1 Pack Refried Beans"],
+                description: 'Assorted groceries on white background'
+            },
+            imageUrl: "https://res.cloudinary.com/dayoaxmy4/image/upload/v1750834133/sgbypvyfrwiod77uro50.webp",
+            isBtnEnabled: true,
+            page: 3,
             /* 
             // test data
             imageUrl: "https://res.cloudinary.com/drplgwglb/image/upload/v1704979133/jvesfy10xjrzvjelgbep.jpg",
@@ -25,8 +28,8 @@ const app = Vue.createApp({
     mounted() {
         this.getEnviorment()
         this.validateUserQuota()
-        this.mealOptions = this.getMealOptions()
-        this.recipePreferences = this.getRecipePreferences()
+        this.mealOptions = this.getMealOptions();
+        this.recipePreferences = this.getRecipePreferences();
     },
     computed: {
         resultPrompt() {
@@ -337,7 +340,7 @@ const app = Vue.createApp({
                 },
                 preparationTime: {},
                 nutrition: {},
-                kitchenForniture: {},
+                kitchenForniture: [],
                 diners: 1,
             }
         },
@@ -379,17 +382,14 @@ const app = Vue.createApp({
                     minCalories: 0,
                     maxCalories: 0,
                 },
-                kitchenForniture: {
-                    kitchenResources: [
-                        'no-preference', 'oven', 'blender', 'microwave', 'toaster', 'grill', 'griddle',
-                        'fryer', 'pressure cooker', 'slow cooker', 'food processor', 'juicer', 'spiralizer', 'coffee maker',
-                        'waffle maker', 'ice cream maker', 'stand mixer', 'hand mixer', 'food dehydrator', 'food scale',
-                        'measuring cups', 'measuring spoons', 'thermometer', 'colander', 'strainer', 'spatula', 'whisk',
-                        'peeler', 'can opener', 'bottle opener', 'corkscrew', 'ladle', 'tongs', 'masher', 'grater', 'zester',
-                        'sieve', 'chopper', 'slicer', 'knife', 'cutting board'
-                    ]
-
-                },
+                kitchenForniture: [
+                    'no-preference', 'oven', 'blender', 'microwave', 'toaster', 'grill', 'griddle',
+                    'fryer', 'pressure cooker', 'slow cooker', 'food processor', 'juicer', 'spiralizer', 'coffee maker',
+                    'waffle maker', 'ice cream maker', 'stand mixer', 'hand mixer', 'food dehydrator', 'food scale',
+                    'measuring cups', 'measuring spoons', 'thermometer', 'colander', 'strainer', 'spatula', 'whisk',
+                    'peeler', 'can opener', 'bottle opener', 'corkscrew', 'ladle', 'tongs', 'masher', 'grater', 'zester',
+                    'sieve', 'chopper', 'slicer', 'knife', 'cutting board'
+                ],
                 diners: 1,
             }
         },
@@ -416,10 +416,10 @@ const app = Vue.createApp({
             }
         },
         validateRecipePreferencesKitchenResources() {
-            const kitchenResources = this.recipePreferences.kitchenForniture.kitchenResources
-            if (kitchenResources.length > 0) {
-                if (kitchenResources.includes('no-preference')) {
-                    this.recipePreferences.kitchenForniture.kitchenResources = ['no-preference']
+            const kitchenFornitureValues = this.recipePreferences.kitchenForniture
+            if (kitchenFornitureValues.length > 0) {
+                if (kitchenFornitureValues.includes('no-preference')) {
+                    this.recipePreferences.kitchenForniture = ['no-preference']
                 }
             }
         },
